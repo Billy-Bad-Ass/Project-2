@@ -12,6 +12,10 @@ export const metadata: Metadata = {
     template: `%s — ${merchant.name}`,
   },
   description: merchant.tagline,
+  // www.bbanetwork.org is attached to the same Worker rather than redirected, so
+  // both hostnames serve the identical page. This tells search engines which one
+  // is the real address instead of leaving them to split the ranking.
+  alternates: { canonical: './' },
   openGraph: {
     type: 'website',
     siteName: merchant.name,

@@ -65,21 +65,29 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Resolve the site origin
-        # Prefer the repo variable; otherwise fall back to wrangler.jsonc, which
-        # holds the deployed origin. Next inlines NEXT_PUBLIC_* at build time,
-        # so this value has to be settled before the build, not after.
+        # wrangler.jsonc is authoritative. It is also what the Worker reads at
+        # runtime, so letting a repo variable win here would inline one origin at
+        # build time and serve another at request time — a split that shows up as
+        # checkout redirects to the wrong host, not as a build error.
+        #
+        # Next inlines NEXT_PUBLIC_* at build time, so this has to be settled
+        # before the build, not after.
         id: site
         run: |
-          origin="${{ vars.SITE_URL }}"
-          if [ -z "$origin" ]; then
-            origin=$(node -e "
-              const raw = require('fs').readFileSync('wrangler.jsonc', 'utf8')
-                .replace(/\/\*[\s\S]*?\*\//g, '')
-                .replace(/^\s*\/\/.*\$/gm, '');
-              process.stdout.write(JSON.parse(raw).vars?.NEXT_PUBLIC_SITE_URL ?? '');
-            ")
-          fi
+          origin=$(node -e "
+            const raw = require('fs').readFileSync('wrangler.jsonc', 'utf8')
+              .replace(/\/\*[\s\S]*?\*\//g, '')
+              .replace(/^\s*\/\/.*\$/gm, '');
+            process.stdout.write(JSON.parse(raw).vars?.NEXT_PUBLIC_SITE_URL ?? '');
+          ")
           origin="${origin%/}"
+
+          declared="${{ vars.SITE_URL }}"
+          declared="${declared%/}"
+          if [ -n "$declared" ] && [ "$declared" != "$origin" ]; then
+            echo "::warning::The SITE_URL repository variable says '$declared' but wrangler.jsonc says '$origin'. wrangler.jsonc wins; delete the variable to stop this warning."
+          fi
+
           echo "origin=$origin" >> $GITHUB_OUTPUT
           echo "Site origin: ${origin:-<unset>}"
 

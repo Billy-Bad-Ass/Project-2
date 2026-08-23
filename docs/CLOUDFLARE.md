@@ -120,32 +120,43 @@ curl https://<your-worker-url>/api/health
 Expect `{"ok":true,...,"backend":"r2","missing":[]}`. A 503 tells you exactly
 what is wrong — files not uploaded, or a secret not set.
 
-## Registering a domain on Cloudflare
+## The domain
 
-You said you'd register one. The order matters — do the domain before pointing
-Stripe at anything.
+The store answers on **bbanetwork.org**, registered through Cloudflare. Both the
+apex and `www` are attached to the Worker in the `routes` block of
+`wrangler.jsonc`, so the deploy creates the DNS records and certificates itself
+— there is nothing to click.
 
-1. **Cloudflare dashboard → Domain Registration → Register Domain.** Cloudflare
-   sells at cost with free WHOIS privacy. A `.com` is about £10/year.
-   If you register elsewhere, add the site under **Websites → Add a site** and
-   move the nameservers instead.
-2. **Attach it to the Worker.** Workers & Pages → your Worker → Settings →
-   Domains & Routes → **Add** → Custom Domain → `store.example.com` (or the
-   apex). Cloudflare creates the DNS record and the certificate itself.
-3. **Update the site URL.** Change `NEXT_PUBLIC_SITE_URL` in the `vars` block of
-   `wrangler.jsonc` to the real origin, no trailing slash, then redeploy.
-   Getting this wrong silently breaks the download links in delivery emails
-   while the site itself looks perfectly fine.
-4. **Point the Stripe webhook at it** —
-   `https://<domain>/api/stripe/webhook` — and put the new signing secret in
-   the `STRIPE_WEBHOOK_SECRET` GitHub secret, then run the deploy (or
-   `wrangler secret put STRIPE_WEBHOOK_SECRET` from a terminal).
+`workers_dev` is set to `true` in the same file, deliberately. Wrangler flips it
+to `false` the moment `routes` exists, and the `*.workers.dev` address is the
+fallback the Stripe webhook was first pointed at, so losing it silently would
+stop paid orders being delivered.
+
+`www` is attached rather than redirected: both hostnames serve the same pages,
+and the canonical link tag from `app/layout.tsx` tells search engines the apex is
+the real one. A redirect would need a Cloudflare rule outside this repo.
+
+### Moving to a different domain
+
+The order matters — the domain has to answer before Stripe points at it.
+
+1. **Register or add it.** Cloudflare dashboard → Domain Registration, or
+   **Websites → Add a site** and move the nameservers if you registered
+   elsewhere. The zone must be on the same account as the Worker.
+2. **Add it to `routes`** in `wrangler.jsonc` and change
+   `vars.NEXT_PUBLIC_SITE_URL` to match, no trailing slash. Both in one commit:
+   they are the same fact, and a mismatch inlines one origin into the build
+   while serving another at runtime.
+3. **Deploy**, then load `https://<domain>/api/health` to confirm it answers.
+4. **Repoint the Stripe webhook.** Edit the existing endpoint's URL rather than
+   creating a new one — the signing secret belongs to the endpoint, so editing
+   keeps `STRIPE_WEBHOOK_SECRET` valid and a new endpoint would need a new one.
 5. **Email sender.** If you use Resend, verify the domain there and set
-   `DELIVERY_FROM_EMAIL` to an address on it. Cloudflare Email Routing can
-   forward `support@` to your personal inbox for free.
+   `DELIVERY_FROM_EMAIL` to an address on it. Cloudflare Email Routing forwards
+   `support@` to a personal inbox for free — the storefront prints
+   `support@bbanetwork.org` on eight pages, so that forward needs to exist.
 
-Until the domain exists, the `*.workers.dev` URL works for the full payment
-path — including a real test purchase.
+The `*.workers.dev` URL keeps working throughout, including for a test purchase.
 
 ## Local development
 
