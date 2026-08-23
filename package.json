@@ -20,7 +20,12 @@
     "catalog:build": "node scripts/build-catalog.mjs",
     "prebuild": "node scripts/build-catalog.mjs",
     "workflows:check": "node scripts/check-workflows.mjs",
-    "pdf:check": "node scripts/check-pdfs.mjs"
+    "pdf:check": "node scripts/check-pdfs.mjs",
+    "pdf:upload": "node scripts/upload-downloads.mjs",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf:types": "wrangler types"
   },
   "dependencies": {
     "next": "^15.5.4",
@@ -29,11 +34,14 @@
     "stripe": "^19.1.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260823.1",
+    "@opennextjs/cloudflare": "^1.20.2",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "marked": "^15.0.6",
     "playwright": "^1.49.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "wrangler": "^4.125.0"
   }
 }

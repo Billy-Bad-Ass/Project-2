@@ -1,0 +1,43 @@
+/**
+ * Cloudflare Workers configuration.
+ *
+ * The store runs on Workers via @opennextjs/cloudflare. Two things matter here:
+ *
+ *  - `nodejs_compat` — lib/download-token.ts uses node:crypto for HMAC signing.
+ *  - the DOWNLOADS R2 bucket — Workers has no filesystem, so the product PDFs
+ *    live in object storage and are streamed by app/api/download after the
+ *    purchase is verified. R2 is private by default; do not attach a public
+ *    bucket URL to it, or the whole paywall is bypassed.
+ *
+ * Secrets are NOT set here. Use `wrangler secret put <NAME>` — see docs/RUNBOOK.md.
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bba-network-store",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  "r2_buckets": [
+    {
+      "binding": "DOWNLOADS",
+      "bucket_name": "bba-network-downloads",
+      "preview_bucket_name": "bba-network-downloads-preview"
+    }
+  ],
+
+  "vars": {
+    // Public, non-secret values only. Anything sensitive goes in `wrangler secret put`.
+    "NEXT_PUBLIC_SITE_URL": "https://bba-network-store.workers.dev",
+    "STRIPE_AUTOMATIC_TAX": "false"
+  }
+}

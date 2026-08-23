@@ -19,6 +19,9 @@ export function stripe(): Stripe {
   client = new Stripe(key, {
     appInfo: { name: 'BBA Network Store', url: 'https://github.com/Billy-Bad-Ass/Project-2' },
     maxNetworkRetries: 2,
+    // Cloudflare Workers has no Node http stack. The fetch client works on both
+    // runtimes, so it is used unconditionally rather than sniffing the platform.
+    httpClient: Stripe.createFetchHttpClient(),
   });
   return client;
 }

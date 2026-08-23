@@ -16,7 +16,8 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   let sku: unknown;
   try {
-    ({ sku } = await request.json());
+    const body = (await request.json()) as { sku?: unknown };
+    sku = body?.sku;
   } catch {
     return NextResponse.json({ error: 'Expected a JSON body.' }, { status: 400 });
   }
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
       customer_creation: 'always',
       billing_address_collection: 'auto',
       allow_promotion_codes: true,
-      automatic_tax: { enabled: process.env.STRIPE_AUTOMATIC_TAX === 'true' },
+      automatic_tax: { enabled: String(process.env.STRIPE_AUTOMATIC_TAX) === 'true' },
       metadata: { sku: item.sku, files: item.files.map((f) => f.name).join(',') },
       payment_intent_data: {
         description: `${item.name} — ${merchant.name}`,

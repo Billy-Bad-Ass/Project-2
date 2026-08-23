@@ -8,7 +8,8 @@
 # and public values live in the `vars` block of wrangler.jsonc.
 # See docs/RUNBOOK.md.
 #
-# Copy to .env.local AND .dev.vars. Never commit either.
+# This file is the .dev.vars template used by `wrangler dev`.
+# Copy to .dev.vars. Never commit it.
 # ---------------------------------------------------------------------------
 
 # Stripe — dashboard.stripe.com/apikeys

@@ -83,6 +83,26 @@ authoritative for what a buyer is charged. If no synced price exists it builds i
 **Why the fallback:** the store sells on a fresh Stripe account before anyone has run
 the sync. Without it, a new deploy takes no money until someone remembers a CLI step.
 
+## Product files live in R2, not on the filesystem
+
+Cloudflare Workers has no filesystem, so `app/api/download` reads from a private R2
+bucket through `lib/storage.ts`, which falls back to `private/downloads/` when no
+binding is present.
+
+**Why R2 rather than bundling the PDFs into the Worker:** the six files are ~780 KB
+today, which would fit inside the Worker size limit — but it would put a hard ceiling
+on the catalogue, and every product change would need a redeploy rather than an
+upload. R2 also has free egress, which is the whole economics of selling files.
+
+**Why not Workers static assets:** those are served publicly by design. The paywall
+is the download route; anything reachable without going through it is free product.
+The same reasoning is why the R2 bucket must never get a public URL.
+
+**Cost of the split:** two code paths, and a deploy step (`npm run pdf:upload`) that
+is easy to forget. `/api/health` exists specifically to catch that — it reports which
+backend is live and which files are missing, so "deployed but never uploaded" is one
+curl away rather than a customer complaint.
+
 ## No CSS framework
 
 Hand-written CSS with custom properties, in `app/globals.css` for the screen and
@@ -90,6 +110,16 @@ Hand-written CSS with custom properties, in `app/globals.css` for the screen and
 
 **Why:** six pages. The print layouts need exact millimetre control that utility
 classes fight. The whole site ships ~103 kB of JS, and one client component.
+
+## Workers-compatible Stripe calls everywhere
+
+The webhook uses `constructEventAsync` and the client uses
+`Stripe.createFetchHttpClient()`.
+
+**Why unconditionally rather than branching on runtime:** Workers has no synchronous
+crypto and no Node http stack, so the sync forms simply fail there. Both async forms
+work identically on Node, so a runtime check would add a branch that is never
+exercised on one side and can silently rot.
 
 ## Verification is built into the agent workflows
 

@@ -48,10 +48,26 @@ A non-empty plan before release means the storefront and Stripe disagree about p
 - No secret is committed: `git grep -nE 'sk_(live|test)_|whsec_|re_[A-Za-z0-9]{20}'`
   returns nothing.
 
+**Cloudflare and R2**
+- `npm run cf:build` completes.
+- Every PDF the catalogue references is in R2: `npm run pdf:upload -- --dry-run`
+  lists them, and on a deployed Worker `curl <origin>/api/health` must report
+  `ok: true`, `backend: "r2"` and an empty `missing` array. A deploy whose PDFs were
+  never uploaded looks completely healthy from the storefront and 500s on every
+  download — this is the single most likely way this store breaks.
+- The R2 bucket has **no** public URL and no custom domain attached. Anything
+  reachable without passing through the download route is free product.
+- `wrangler.jsonc` still has the `nodejs_compat` flag (`lib/download-token.ts`
+  needs `node:crypto`) and no secrets in its `vars` block.
+- The webhook still uses `constructEventAsync` — the synchronous form cannot work
+  on Workers and fails only at runtime, on a real payment.
+
 **Environment**
 - Every variable in `.env.example` has a real value in the deploy target.
-- `NEXT_PUBLIC_SITE_URL` matches the actual domain — a wrong value silently breaks
-  the download links in delivery emails while the site looks fine.
+- `NEXT_PUBLIC_SITE_URL` in the `vars` block of `wrangler.jsonc` matches the actual
+  domain — a wrong value silently breaks the download links in delivery emails while
+  the site looks fine.
+- Secrets are set via `wrangler secret list`, not committed in `wrangler.jsonc`.
 - The Stripe webhook endpoint exists and is subscribed to
   `checkout.session.completed`.
 

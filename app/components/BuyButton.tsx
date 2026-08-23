@@ -30,7 +30,7 @@ export function BuyButton({
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ sku }),
       });
-      const data = await response.json();
+      const data = (await response.json()) as { url?: string; error?: string };
 
       if (!response.ok || !data.url) {
         throw new Error(data.error ?? 'Checkout is unavailable right now.');

@@ -8,6 +8,13 @@ node_modules/
 out/
 next-env.d.ts.timestamp
 
+# cloudflare
+.open-next/
+.wrangler/
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
 # generated product files — rebuild with `npm run pdf:build`
 private/downloads/*.pdf
 private/downloads/*.debug.html

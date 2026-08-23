@@ -61,6 +61,19 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: https://example.invalid
 
+      - name: Build the Cloudflare Worker
+        # Catches Workers-only breakage that `next build` cannot see: a node:
+        # builtin with no Workers equivalent, or a bundle that will not compile
+        # for workerd. Needs no Cloudflare credentials.
+        run: npm run cf:build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://example.invalid
+
+      - name: Check every catalogue PDF would reach R2
+        # A deploy whose PDFs were never uploaded looks healthy and 500s on every
+        # download, so verify the upload set matches the catalogue.
+        run: npm run pdf:upload -- --dry-run
+
       - name: Upload PDFs for review
         uses: actions/upload-artifact@v4
         with:

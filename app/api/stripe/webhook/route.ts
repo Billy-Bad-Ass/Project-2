@@ -31,7 +31,10 @@ export async function POST(request: NextRequest) {
 
   let event: Stripe.Event;
   try {
-    event = stripe().webhooks.constructEvent(payload, signature, secret);
+    // Async variant is required on Cloudflare Workers: signature verification
+    // goes through SubtleCrypto, which has no synchronous form. It works
+    // identically on Node, so there is no reason to branch on the runtime.
+    event = await stripe().webhooks.constructEventAsync(payload, signature, secret);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'unknown';
     console.error(`[webhook] signature verification failed: ${message}`);

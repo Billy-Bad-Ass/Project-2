@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFile, stat } from 'node:fs/promises';
-import { join } from 'node:path';
 import { stripe } from '@/lib/stripe';
 import { verifyDownloadToken, isSafeFileName } from '@/lib/download-token';
 import { entitlementsFor, isPaid } from '@/lib/entitlements';
+import { readProductFile, storageBackend } from '@/lib/storage';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-const DOWNLOAD_DIR = join(process.cwd(), 'private', 'downloads');
 
 const deny = (message: string, status: number) =>
   new NextResponse(message, {
@@ -52,22 +49,22 @@ export async function GET(request: NextRequest) {
   const permitted = entitlementsFor(session).some((e) => e.files.some((f) => f.name === file));
   if (!permitted) return deny('This order does not include that file.', 403);
 
-  const path = join(DOWNLOAD_DIR, file);
-  try {
-    await stat(path);
-  } catch {
-    console.error(`[download] entitled file is missing from disk: ${file}`);
+  const stored = await readProductFile(file);
+  if (!stored) {
+    // Entitled but absent: the buyer paid, so this is our problem, not theirs.
+    console.error(
+      `[download] entitled file is missing from ${await storageBackend()}: ${file} ` +
+        `(session ${sessionId}) — re-run \`npm run pdf:build && npm run pdf:upload\``,
+    );
     return deny('That file is not available right now. Please contact support.', 500);
   }
 
-  const body = await readFile(path);
-  return new NextResponse(new Uint8Array(body), {
-    status: 200,
-    headers: {
-      'content-type': 'application/pdf',
-      'content-length': String(body.byteLength),
-      'content-disposition': `attachment; filename="${file}"`,
-      'cache-control': 'private, no-store',
-    },
-  });
+  const headers: Record<string, string> = {
+    'content-type': 'application/pdf',
+    'content-disposition': `attachment; filename="${file}"`,
+    'cache-control': 'private, no-store',
+  };
+  if (stored.size !== null) headers['content-length'] = String(stored.size);
+
+  return new NextResponse(stored.body as BodyInit, { status: 200, headers });
 }
