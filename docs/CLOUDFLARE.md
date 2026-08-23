@@ -40,25 +40,30 @@ deploys the Worker.
    shown again.
 2. **Cloudflare → Workers & Pages.** Copy the **Account ID** from the right-hand
    sidebar, and note your `workers.dev` subdomain.
-3. **GitHub → Settings → Secrets and variables → Actions.** Add two repository
-   *secrets*: `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
+3. **GitHub → Settings → Secrets and variables → Actions.** Add five repository
+   *secrets*: `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` for the deploy
+   itself, then the three the Worker needs at runtime — `STRIPE_SECRET_KEY`,
+   `STRIPE_WEBHOOK_SECRET` and `DOWNLOAD_SIGNING_SECRET`.
+
+   The deploy pushes those last three onto the Worker with `wrangler secret put`,
+   so GitHub is the only place you need to keep them. Only names that are
+   actually present get pushed, so a name you leave out keeps whatever the Worker
+   already has; a name you change here overwrites the Worker on the next run,
+   which makes this the rotation path too.
 4. **GitHub → Actions → Deploy to Cloudflare → Run workflow.** The job summary
    prints the deployed URL and the health result.
-5. **Add the Worker's own secrets** in the Cloudflare dashboard —
-   Workers & Pages → `bba-network-store` → Settings → Variables and Secrets →
-   *Add*: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
-   `DOWNLOAD_SIGNING_SECRET`. The Worker has to exist first, so this comes after
-   the first deploy.
-
-   **The type dropdown must say `Secret`, not `Text`.** A value added as Text is
-   readable by anyone with dashboard access and — worse — gets printed in full
-   into the GitHub Actions log on the next deploy, because wrangler diffs local
-   config against remote and shows what differs. If that happens, treat the
-   value as leaked and rotate it. Secrets never appear in that diff.
-6. **GitHub → Settings → Secrets and variables → Actions → Variables.** Add
+5. **GitHub → Settings → Secrets and variables → Actions → Variables.** Add
    `SITE_URL` set to the deployed origin, then run the workflow once more —
    `NEXT_PUBLIC_SITE_URL` is inlined at build time, so it needs a rebuild rather
    than just a variable change.
+
+If you set a runtime secret in the Cloudflare dashboard instead — Workers & Pages
+→ `bba-network-store` → Settings → Variables and Secrets — **the type dropdown
+must say `Secret`, not `Text`.** A value added as Text is readable by anyone with
+dashboard access and, worse, gets printed in full into the GitHub Actions log on
+the next deploy, because wrangler diffs local config against remote and shows
+what differs. If that happens, treat the value as leaked and rotate it. Secrets
+never appear in that diff. Going through GitHub avoids the choice entirely.
 
 The rest of this document is the equivalent from a terminal.
 
@@ -133,7 +138,8 @@ Stripe at anything.
    while the site itself looks perfectly fine.
 4. **Point the Stripe webhook at it** —
    `https://<domain>/api/stripe/webhook` — and put the new signing secret in
-   with `wrangler secret put STRIPE_WEBHOOK_SECRET`.
+   the `STRIPE_WEBHOOK_SECRET` GitHub secret, then run the deploy (or
+   `wrangler secret put STRIPE_WEBHOOK_SECRET` from a terminal).
 5. **Email sender.** If you use Resend, verify the domain there and set
    `DELIVERY_FROM_EMAIL` to an address on it. Cloudflare Email Routing can
    forward `support@` to your personal inbox for free.
