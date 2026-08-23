@@ -1,6 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BBA Network mark">
-  <title>BBA Network</title>
-  <rect width="64" height="64" rx="16" fill="#14110F"/>
-  <path d="M16 19h13a7 7 0 0 1 2.1 13.7A7.5 7.5 0 0 1 29.5 46H16V19Zm6 5v6.5h6.5a3.25 3.25 0 0 0 0-6.5H22Zm0 11.5V42h7a3.25 3.25 0 0 0 0-6.5h-7Z" fill="#FBF7F0"/>
-  <rect x="39" y="19" width="7" height="27" rx="1.5" fill="#C2410C"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="12 16 114 64" fill="none"><g stroke="#12161F" stroke-width="3.4"><line x1="33.2" y1="20" x2="54.8" y2="20"></line><line x1="22.6" y1="27" x2="65.4" y2="27"></line><line x1="17.5" y1="34" x2="70.5" y2="34"></line><line x1="14.8" y1="41" x2="73.2" y2="41"></line><line x1="14.8" y1="55" x2="73.2" y2="55"></line><line x1="17.5" y1="62" x2="70.5" y2="62"></line><line x1="22.6" y1="69" x2="65.4" y2="69"></line><line x1="33.2" y1="76" x2="54.8" y2="76"></line></g><line x1="14" y1="48" x2="112" y2="48" stroke="#2B5CE6" stroke-width="3.4"></line><rect x="116" y="44" width="8" height="8" fill="#2B5CE6"></rect></svg>

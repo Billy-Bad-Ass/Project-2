@@ -4,14 +4,14 @@
 --------------------------------------------------------------------------- */
 
 :root {
-  --ink: #14110F;
-  --paper: #FBF7F0;
+  --ink: #12161F;
+  --paper: #FAFAF8;
   --surface: #FFFFFF;
-  --accent: #C2410C;
-  --accent-soft: #FDF3E7;
-  --muted: #6B6259;
-  --rule: #E5DFD5;
-  --ok: #2F6B3A;
+  --accent: #2B5CE6;
+  --accent-soft: #EEF2FE;
+  --muted: #5B6474;
+  --rule: #E2E5EB;
+  --ok: #1F7A4D;
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -24,14 +24,16 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #F2EDE4;
-    --paper: #14110F;
-    --surface: #1D1916;
-    --accent: #F97316;
-    --accent-soft: #2A1D12;
-    --muted: #A79C90;
-    --rule: #332C26;
-    --ok: #6FBF7F;
+    --ink: #EDEFF3;
+    --paper: #0B0F16;
+    --surface: #151A24;
+    /* Lighter than the brand blue on purpose: #2B5CE6 on this background is
+       about 3.3:1, which fails for body-sized link text. */
+    --accent: #5B82F0;
+    --accent-soft: #16203A;
+    --muted: #99A1B0;
+    --rule: #262C38;
+    --ok: #5FC28C;
     --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px -12px rgb(0 0 0 / 60%);
   }
 }
@@ -101,11 +103,13 @@ p { margin: 0 0 1em; }
   min-height: 68px;
 }
 .site-header__logo { display: flex; align-items: center; }
-.site-header__logo img { height: 34px; width: auto; display: block; }
-@media (prefers-color-scheme: dark) {
-  /* the mark is drawn in ink-on-paper; flip it rather than ship a second file */
-  .site-header__logo img, .site-footer__logo img { filter: invert(1) hue-rotate(180deg); }
-}
+/* 46px, not the 34px the placeholder used. The real lockup gives the wordmark a
+   much smaller share of its width than the placeholder did, so the same height
+   rendered "BBA NETWORK" at about 5px cap height — present but unreadable. */
+.site-header__logo img { height: 46px; width: auto; display: block; }
+/* No inversion filter here any more. The brand kit ships real dark variants and
+   the header swaps to them with <picture>; inverting would have turned the blue
+   accent orange, which is the one colour in the mark that must not move. */
 .site-nav { display: flex; align-items: center; gap: 22px; font-size: 0.92rem; }
 .site-nav a { color: var(--ink); text-decoration: none; }
 .site-nav a:hover { color: var(--accent); }
@@ -125,7 +129,7 @@ p { margin: 0 0 1em; }
 @media (min-width: 720px) {
   .site-footer__grid { grid-template-columns: 1.4fr 1fr 1fr; }
 }
-.site-footer__logo img { height: 30px; width: auto; margin-bottom: 10px; }
+.site-footer__logo img { height: 40px; width: auto; margin-bottom: 10px; }
 .site-footer h4 {
   font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em;
   color: var(--ink); margin: 0 0 10px;

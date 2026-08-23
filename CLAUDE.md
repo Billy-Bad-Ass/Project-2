@@ -56,7 +56,6 @@ PDFs live in R2, not in the bundle, so a deploy alone does not update them.
 
 ## Known gaps
 
-- The logo in `brand/` and `public/` is a **placeholder** — see `brand/README.md`.
 - `miniature-speedpaint-recipe-sheet` is missing its eight recipe tables; they exported
   empty. See `docs/RUNBOOK.md`. Do not fill them in from general knowledge.
 

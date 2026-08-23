@@ -1,8 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" role="img" aria-label="BBA Network">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="12 16 160 64" role="img" aria-label="BBA Network">
   <title>BBA Network</title>
-  <rect x="2" y="8" width="48" height="48" rx="12" fill="#14110F"/>
-  <path d="M14 22h10.5a5.5 5.5 0 0 1 1.6 10.76A6 6 0 0 1 25 44H14V22Zm5 4v5h5a2.5 2.5 0 0 0 0-5h-5Zm0 9v5h5.5a2.5 2.5 0 0 0 0-5H19Z" fill="#FBF7F0"/>
-  <path d="M31 22h6v22h-6z" fill="#C2410C"/>
-  <text x="64" y="34" font-family="ui-sans-serif,system-ui,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5" fill="#14110F">BBA Network</text>
-  <text x="65" y="49" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.5" letter-spacing="2.4" fill="#6B6259">REFERENCE GUIDES</text>
+  <g stroke="#12161F" stroke-width="3.4">
+    <line x1="33.2" y1="20" x2="54.8" y2="20"/>
+    <line x1="22.6" y1="27" x2="65.4" y2="27"/>
+    <line x1="17.5" y1="34" x2="70.5" y2="34"/>
+    <line x1="14.8" y1="41" x2="73.2" y2="41"/>
+    <line x1="14.8" y1="55" x2="73.2" y2="55"/>
+    <line x1="17.5" y1="62" x2="70.5" y2="62"/>
+    <line x1="22.6" y1="69" x2="65.4" y2="69"/>
+    <line x1="33.2" y1="76" x2="54.8" y2="76"/>
+  </g>
+  <line x1="14" y1="48" x2="112" y2="48" stroke="#2B5CE6" stroke-width="3.4"/>
+  <rect x="116" y="44" width="8" height="8" fill="#2B5CE6"/>
+  <text x="129" y="51" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="14.5" font-weight="800" letter-spacing="-0.35" fill="#12161F">BBA</text>
+  <text x="130.5" y="60.5" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="4.6" font-weight="500" letter-spacing="1.95" fill="#5B6474">NETWORK</text>
 </svg>
