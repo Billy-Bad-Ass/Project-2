@@ -23,6 +23,45 @@ test('isPaid accepts a paid session and rejects an unpaid one', () => {
   assert.equal(ent.isPaid(session({ payment_status: 'unpaid', status: 'open' })), false);
 });
 
+test('isPaid rejects a completed session whose money has not arrived', () => {
+  // Klarna, Cash App and Amazon Pay are enabled on this account. They complete
+  // the session first and settle afterwards, so this pairing is the normal
+  // state of a real order for a few minutes — and it was reading as paid.
+  assert.equal(
+    ent.isPaid(session({ payment_status: 'unpaid', status: 'complete' })),
+    false,
+    'complete is not paid',
+  );
+});
+
+test('isPaid accepts a fully discounted order', () => {
+  assert.equal(ent.isPaid(session({ payment_status: 'no_payment_required' })), true);
+});
+
+const charged = (charge) =>
+  session({ payment_intent: { latest_charge: { amount_refunded: 0, ...charge } } });
+
+test('isRevoked is false for a clean charge', () => {
+  assert.equal(ent.isRevoked(charged({ refunded: false, disputed: false })), false);
+});
+
+test('isRevoked catches refunds, partial refunds and disputes', () => {
+  assert.equal(ent.isRevoked(charged({ refunded: true })), true, 'refunded');
+  assert.equal(ent.isRevoked(charged({ amount_refunded: 200 })), true, 'partial refund');
+  assert.equal(ent.isRevoked(charged({ disputed: true })), true, 'disputed');
+});
+
+test('isRevoked stays false when the charge was not expanded', () => {
+  // Callers that do not expand get no opinion rather than a false accusation.
+  assert.equal(ent.isRevoked(session()), false, 'no payment_intent');
+  assert.equal(ent.isRevoked(session({ payment_intent: 'pi_123' })), false, 'unexpanded intent');
+  assert.equal(
+    ent.isRevoked(session({ payment_intent: { latest_charge: 'ch_123' } })),
+    false,
+    'unexpanded charge',
+  );
+});
+
 test('skusFor prefers session metadata', () => {
   const skus = ent.skusFor(session({ metadata: { sku: 'espresso-dial-in-card' } }));
   assert.deepEqual(skus, ['espresso-dial-in-card']);

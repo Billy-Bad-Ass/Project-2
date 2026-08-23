@@ -54,8 +54,11 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'charge.refunded':
-        // Links stay signed but the download route re-checks Stripe, so a
-        // refunded session stops working on its own. Logged for the record.
+        // Nothing to revoke here: the download route reads the refund state off
+        // the charge on every request, so access closes the moment the refund
+        // lands, with no state for this handler to keep. It did NOT close on its
+        // own before isRevoked() existed — a refund leaves payment_status 'paid'
+        // and status 'complete' exactly as they were.
         console.info(`[webhook] refund recorded for ${event.data.object.id}`);
         break;
 

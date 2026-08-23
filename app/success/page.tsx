@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { stripe } from '@/lib/stripe';
-import { signEntitlements, isPaid } from '@/lib/entitlements';
+import { signEntitlements, isPaid, isRevoked } from '@/lib/entitlements';
 import { merchant } from '@/lib/catalog';
 import { configuredSiteUrl } from '@/lib/site';
 import { Icon } from '@/app/components/Icon';
@@ -29,7 +29,9 @@ export default async function SuccessPage({ searchParams }: Params) {
   let session;
   try {
     session = await stripe().checkout.sessions.retrieve(sessionId, {
-      expand: ['line_items.data.price.product'],
+      // Without latest_charge this page would keep minting fresh 72-hour links
+      // for an order that has already been refunded.
+      expand: ['line_items.data.price.product', 'payment_intent.latest_charge'],
     });
   } catch {
     return (
@@ -50,6 +52,19 @@ export default async function SuccessPage({ searchParams }: Params) {
           Stripe reports this order as <strong>{session.payment_status}</strong>. Some
           payment methods take a few minutes. Refresh shortly, or check your email —
           we send the links the moment it clears.
+        </p>
+      </Problem>
+    );
+  }
+
+  if (isRevoked(session)) {
+    return (
+      <Problem title="This order has been refunded">
+        <p>
+          The payment for this order was returned, so the downloads are closed. If
+          that is not what you expected, email{' '}
+          <a href={`mailto:${merchant.supportEmail}`}>{merchant.supportEmail}</a> and
+          we will look into it.
         </p>
       </Problem>
     );
