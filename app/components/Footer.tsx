@@ -8,7 +8,10 @@ export function Footer() {
         <div className="site-footer__grid">
           <div>
             <div className="site-footer__logo">
-              <img src="/logo.svg" alt={merchant.name} width={240} height={64} />
+              <picture>
+                <source srcSet="/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+                <img src="/logo.svg" alt={merchant.name} width={292} height={72} />
+              </picture>
             </div>
             <p style={{ maxWidth: '34ch' }}>{merchant.tagline}</p>
           </div>

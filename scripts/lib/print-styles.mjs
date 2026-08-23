@@ -2,12 +2,12 @@
  *  tuned without touching the build script. */
 export const printCss = `
   :root {
-    --ink: #14110F;
+    --ink: #12161F;
     --paper: #FFFFFF;
-    --accent: #C2410C;
-    --muted: #6B6259;
-    --rule: #D9D2C7;
-    --wash: #F6F2EB;
+    --accent: #2B5CE6;
+    --muted: #5B6474;
+    --rule: #D7DBE3;
+    --wash: #F3F5F9;
   }
 
   * { box-sizing: border-box; }
@@ -159,9 +159,12 @@ export const printCss = `
 
   /* warning callouts — the notes mark these with a leading ⚠ */
   .callout {
-    background: #FDF3E7;
-    border: 0.5pt solid #E8C39A;
-    border-left: 2.5pt solid var(--accent);
+    /* Deliberately still amber, not brand blue. This marks a warning in a
+       printed reference someone is following at a machine — the colour is doing
+       semantic work, and recolouring it to match the logo would cost that. */
+    background: #FFF6E8;
+    border: 0.5pt solid #E4C48E;
+    border-left: 2.5pt solid #C2740C;
     padding: 2.5mm 3.5mm;
     margin: 3mm 0;
     break-inside: avoid;

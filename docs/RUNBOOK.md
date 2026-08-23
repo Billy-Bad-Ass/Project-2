@@ -2,15 +2,7 @@
 
 Everything between "the code works" and "the business takes money".
 
-## 1. The two things blocking a real launch
-
-### The logo is a placeholder
-
-The brief mentioned a logo, but only the three product markdown files arrived — no
-image came through. `brand/logo.svg` and `brand/logo-mark.svg` are placeholders built
-from the business name.
-
-Replacing it is a two-file change; see `brand/README.md`. Nothing else hardcodes it.
+## 1. The one thing blocking a real launch
 
 ### The miniature guide is missing its recipe tables
 
