@@ -58,7 +58,9 @@ test('every item ships an A4 and a US Letter file, uniquely named', () => {
   }
 });
 
-test('the bundle costs less than its parts and its saving is stated correctly', () => {
+// There are deliberately no bundles right now — espresso, keyboards and
+// miniatures do not share a buyer. This guards the rule for when one returns.
+test('any bundle costs less than its parts and states the saving correctly', () => {
   for (const bundle of catalog.bundles) {
     const parts = bundle.includes.map((sku) => catalog.getItem(sku));
     const full = parts.reduce((sum, p) => sum + p.priceMinor, 0);
@@ -72,10 +74,19 @@ test('the bundle costs less than its parts and its saving is stated correctly', 
   }
 });
 
-test('formatPrice renders GBP the way the storefront shows it', () => {
+test('formatPrice renders each currency in its own locale', () => {
+  // 'en-GB' would render USD as "US$9.45", which is why the locale follows the
+  // currency rather than being fixed.
+  assert.equal(catalog.formatPrice(945, 'usd'), '$9.45');
+  assert.equal(catalog.formatPrice(900, 'usd'), '$9');
   assert.equal(catalog.formatPrice(500, 'gbp'), '£5');
-  assert.equal(catalog.formatPrice(1400, 'gbp'), '£14');
   assert.equal(catalog.formatPrice(650, 'gbp'), '£6.50');
+});
+
+test('every product carries the catalogue currency', () => {
+  for (const item of catalog.items) {
+    assert.equal(item.currency, catalog.currency);
+  }
 });
 
 test('page counts are positive and match the parsed page list', () => {

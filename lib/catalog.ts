@@ -5,12 +5,29 @@
  * Never edit generated.json by hand; edit the note or the metadata and rebuild.
  */
 import generated from '@/catalog/generated.json';
+import previewManifest from '@/catalog/previews.json';
 
 export type CatalogFile = {
   name: string;
   size: 'A4' | 'Letter' | string;
   label: string;
 };
+
+export type Review = {
+  rating: number;
+  author: string;
+  location: string;
+  date: string;
+  verified: boolean;
+  text: string;
+};
+
+export type Rating = { count: number; average: number };
+
+export type DescriptionBlock =
+  | { type: 'heading'; text: string }
+  | { type: 'text'; text: string }
+  | { type: 'list'; items: string[] };
 
 export type CatalogItem = {
   type: 'single' | 'bundle';
@@ -20,6 +37,7 @@ export type CatalogItem = {
   blurb: string;
   listingTitle: string;
   description: string;
+  descriptionBlocks: DescriptionBlock[];
   tags: string[];
   priceMinor: number;
   currency: string;
@@ -36,6 +54,8 @@ export type CatalogItem = {
   pages?: { number: number; heading: string; markdown: string }[];
   landscapePages?: number[];
   sourceNote?: string;
+  reviews: Review[];
+  rating: Rating | null;
 };
 
 export type Merchant = {
@@ -69,10 +89,43 @@ export function filesFor(sku: string): CatalogFile[] {
   return getItem(sku)?.files ?? [];
 }
 
+/** Locale drives the symbol and its placement, so it has to follow the currency
+ *  rather than being fixed — 'en-GB' formats USD as "US$9.45", not "$9.45". */
+const LOCALES: Record<string, string> = {
+  usd: 'en-US',
+  gbp: 'en-GB',
+  eur: 'en-IE',
+  cad: 'en-CA',
+  aud: 'en-AU',
+};
+
+export type Preview = {
+  name: string;
+  kind: 'cover' | 'page' | string;
+  page: number;
+  heading: string;
+  width: number;
+};
+
+const previews = previewManifest as unknown as Record<string, Preview[]>;
+
+/**
+ * Shop images for a product, generated from the same HTML as the PDF so they
+ * cannot drift from what the buyer receives. Interior shots are deliberately
+ * cropped — see scripts/build-previews.mjs.
+ */
+export function previewsFor(sku: string): Preview[] {
+  return previews[sku] ?? [];
+}
+
+export const previewUrl = (preview: Preview) => `/previews/${preview.name}`;
+
 export function formatPrice(minor: number, code: string = currency): string {
-  return new Intl.NumberFormat('en-GB', {
+  const key = code.toLowerCase();
+  return new Intl.NumberFormat(LOCALES[key] ?? 'en-US', {
     style: 'currency',
     currency: code.toUpperCase(),
+    // Whole amounts read better without ".00"; anything else keeps its pence.
     minimumFractionDigits: minor % 100 === 0 ? 0 : 2,
   }).format(minor / 100);
 }

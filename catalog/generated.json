@@ -1,11 +1,11 @@
 {
-  "generatedFrom": "content/products/*.md + catalog/products.json",
+  "generatedFrom": "content/products/*.md + catalog/products.json + content/reviews/*.md",
   "merchant": {
     "name": "BBA Network",
     "tagline": "Printable reference guides that actually fix the problem.",
     "supportEmail": "support@bba.network"
   },
-  "currency": "gbp",
+  "currency": "usd",
   "items": [
     {
       "type": "single",
@@ -15,6 +15,69 @@
       "blurb": "Sour, bitter, or both at once — the card tells you what that means and exactly what to change next.",
       "listingTitle": "Espresso Dial In Cheat Sheet Printable Coffee Troubleshooting Guide Sour Bitter Fix Home Barista Card Kitchen Coffee Bar Print Digital Download",
       "description": "Sour? Bitter? Both at once? Fix it in one page.\n\nA printable troubleshooting card for home espresso. Pin it by the machine and\nstop guessing which way to move the grinder.\n\nThe card tells you what a shot tastes like, what that actually means, and what\nto change — one variable at a time, so every shot teaches you something.\n\nWHAT YOU GET\n• 6-page PDF, instant download\n• Both A4 and US Letter (two files, same content)\n• THE CARD — a single page designed to be printed and pinned up\n• The taste-to-fix table: sour, bitter, both, watery, ashy\n• A full decision tree including choking and gushing shots\n• Puck prep: WDT, levelling and tamping, and why level beats hard\n• Temperature by roast level\n• A dial-in log sheet, so you can find your way back to a shot that worked\n\nTHE ONE THING MOST GUIDES GET WRONG\nSour AND bitter at the same time is not \"in between\". It is channelling — and\ngrinding finer to chase the sourness makes it worse. This card sends you to\npuck prep instead, and explains why.\n\nWHO IT IS FOR\nAnyone with a home machine and a grinder they can adjust. Beginners who want a\nstarting point that works, and anyone who has been fiddling for weeks without\nthe shot converging.\n\nHONEST ABOUT WHAT IS YOURS\nGrinder click counts are meaningless between machines, and this card says so\nrather than pretending otherwise. It teaches you the method and gives you a log\nsheet to find your own numbers.\n\nDIGITAL DOWNLOAD\nNo physical item is shipped. Files are available immediately after purchase.\nFor personal use — print as many copies as you like for yourself.",
+      "descriptionBlocks": [
+        {
+          "type": "text",
+          "text": "Sour? Bitter? Both at once? Fix it in one page."
+        },
+        {
+          "type": "text",
+          "text": "A printable troubleshooting card for home espresso. Pin it by the machine and stop guessing which way to move the grinder."
+        },
+        {
+          "type": "text",
+          "text": "The card tells you what a shot tastes like, what that actually means, and what to change — one variable at a time, so every shot teaches you something."
+        },
+        {
+          "type": "heading",
+          "text": "WHAT YOU GET"
+        },
+        {
+          "type": "list",
+          "items": [
+            "6-page PDF, instant download",
+            "Both A4 and US Letter (two files, same content)",
+            "THE CARD — a single page designed to be printed and pinned up",
+            "The taste-to-fix table: sour, bitter, both, watery, ashy",
+            "A full decision tree including choking and gushing shots",
+            "Puck prep: WDT, levelling and tamping, and why level beats hard",
+            "Temperature by roast level",
+            "A dial-in log sheet, so you can find your way back to a shot that worked"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "THE ONE THING MOST GUIDES GET WRONG"
+        },
+        {
+          "type": "text",
+          "text": "Sour AND bitter at the same time is not \"in between\". It is channelling — and grinding finer to chase the sourness makes it worse. This card sends you to puck prep instead, and explains why."
+        },
+        {
+          "type": "heading",
+          "text": "WHO IT IS FOR"
+        },
+        {
+          "type": "text",
+          "text": "Anyone with a home machine and a grinder they can adjust. Beginners who want a starting point that works, and anyone who has been fiddling for weeks without the shot converging."
+        },
+        {
+          "type": "heading",
+          "text": "HONEST ABOUT WHAT IS YOURS"
+        },
+        {
+          "type": "text",
+          "text": "Grinder click counts are meaningless between machines, and this card says so rather than pretending otherwise. It teaches you the method and gives you a log sheet to find your own numbers."
+        },
+        {
+          "type": "heading",
+          "text": "DIGITAL DOWNLOAD"
+        },
+        {
+          "type": "text",
+          "text": "No physical item is shipped. Files are available immediately after purchase. For personal use — print as many copies as you like for yourself."
+        }
+      ],
       "tags": [
         "espresso guide",
         "coffee cheat sheet",
@@ -30,8 +93,8 @@
         "espresso print",
         "barista training"
       ],
-      "priceMinor": 500,
-      "currency": "gbp",
+      "priceMinor": 945,
+      "currency": "usd",
       "pageCount": 6,
       "pages": [
         {
@@ -84,7 +147,9 @@
           "size": "Letter",
           "label": "US Letter"
         }
-      ]
+      ],
+      "reviews": [],
+      "rating": null
     },
     {
       "type": "single",
@@ -94,6 +159,61 @@
       "blurb": "Every common mod rated for effect, reliability, reversibility and cost — including the ones that will do nothing on your board.",
       "listingTitle": "Mechanical Keyboard Mod Chart Printable Sound Guide PDF Tape Mod Foam Lube Reference Custom Keyboard Cheat Sheet Desk Setup Print Digital Download",
       "description": "Every common keyboard mod, rated for what it actually does — and what it costs\nyou to undo.\n\nA printable reference chart for anyone modding a mechanical keyboard. Twenty\nmods, each rated for effect, how reliably it works, whether you can reverse it,\nand what it risks.\n\nWHAT YOU GET\n• 6-page PDF, instant download\n• Both A4 and US Letter (two files, same content)\n• THE CHART — every common mod in one table\n• Which mods work on any board, and which depend entirely on yours\n• The order to do them in, and why stabilisers come first\n• The tape mod safety question, with both positions and where it lands\n• \"I want it to sound like ___\" — reverse lookup for thock, quiet, poppy,\n  clacky, and fixing hollow or pingy boards\n• Glossary and a build checklist\n\nTHE HONEST PART\nMost mod guides tell you what to do and not what will do nothing. This one\ntells you when a mod will not work on your board and why — a tape mod on an\nalready-dampened gasket board is the big one — so you stop chasing a change\nthat was never available.\n\nIt also says plainly which things you cannot mod your way to. Plate, mount and\nkeycap material are purchases, not mods, and no amount of tape changes that.\n\nWHO IT IS FOR\nFirst-time builders who want to do things in the right order, and anyone with\na board that sounds wrong and does not know which of six mods to try.\n\nDIGITAL DOWNLOAD\nNo physical item is shipped. Files are available immediately after purchase.\nFor personal use — print as many copies as you like for yourself.",
+      "descriptionBlocks": [
+        {
+          "type": "text",
+          "text": "Every common keyboard mod, rated for what it actually does — and what it costs you to undo."
+        },
+        {
+          "type": "text",
+          "text": "A printable reference chart for anyone modding a mechanical keyboard. Twenty mods, each rated for effect, how reliably it works, whether you can reverse it, and what it risks."
+        },
+        {
+          "type": "heading",
+          "text": "WHAT YOU GET"
+        },
+        {
+          "type": "list",
+          "items": [
+            "6-page PDF, instant download",
+            "Both A4 and US Letter (two files, same content)",
+            "THE CHART — every common mod in one table",
+            "Which mods work on any board, and which depend entirely on yours",
+            "The order to do them in, and why stabilisers come first",
+            "The tape mod safety question, with both positions and where it lands",
+            "\"I want it to sound like ___\" — reverse lookup for thock, quiet, poppy, clacky, and fixing hollow or pingy boards",
+            "Glossary and a build checklist"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "THE HONEST PART"
+        },
+        {
+          "type": "text",
+          "text": "Most mod guides tell you what to do and not what will do nothing. This one tells you when a mod will not work on your board and why — a tape mod on an already-dampened gasket board is the big one — so you stop chasing a change that was never available."
+        },
+        {
+          "type": "text",
+          "text": "It also says plainly which things you cannot mod your way to. Plate, mount and keycap material are purchases, not mods, and no amount of tape changes that."
+        },
+        {
+          "type": "heading",
+          "text": "WHO IT IS FOR"
+        },
+        {
+          "type": "text",
+          "text": "First-time builders who want to do things in the right order, and anyone with a board that sounds wrong and does not know which of six mods to try."
+        },
+        {
+          "type": "heading",
+          "text": "DIGITAL DOWNLOAD"
+        },
+        {
+          "type": "text",
+          "text": "No physical item is shipped. Files are available immediately after purchase. For personal use — print as many copies as you like for yourself."
+        }
+      ],
       "tags": [
         "mechanical keyboard",
         "keyboard mod guide",
@@ -109,8 +229,8 @@
         "desk setup",
         "thock"
       ],
-      "priceMinor": 600,
-      "currency": "gbp",
+      "priceMinor": 945,
+      "currency": "usd",
       "pageCount": 6,
       "pages": [
         {
@@ -165,7 +285,9 @@
           "size": "Letter",
           "label": "US Letter"
         }
-      ]
+      ],
+      "reviews": [],
+      "rating": null
     },
     {
       "type": "single",
@@ -175,6 +297,63 @@
       "blurb": "Eight army recipes and the slapchop method behind them. Whole units, tabletop standard, no airbrush.",
       "listingTitle": "Miniature Painting Recipe Sheet Printable PDF Speed Paint Guide Slapchop Cheat Sheet 8 Army Colour Schemes Wargaming Hobby Digital Download",
       "description": "Eight complete army colour recipes, plus the method that makes them fast.\n\nPaint a whole unit to tabletop standard without an airbrush. This is the\nslapchop method — black primer, two drybrush passes, one coat of contrast\npaint — written out step by step, with eight worked recipes you can follow\nstraight off the page.\n\nWHAT YOU GET\n• 8-page PDF, instant download\n• Both A4 and US Letter (two files, same content)\n• 8 full army recipes: grim green armour, crimson warrior, bone and rot,\n  deep blue knight, rust and scrap, pale and ethereal, black armour,\n  desert skirmisher\n• Every recipe broken down by part — armour, cloth, metal, leather, skin,\n  weapon, highlight and base\n• A troubleshooting page: the five ways this goes wrong and how to fix each\n• A blank recipe sheet to photocopy and fill in for your own armies\n\nWHO IT IS FOR\nAnyone with more unpainted models than evenings. Beginners who want a method\nthat works the first time, and experienced painters who want their units to\nmatch without keeping notes in their head.\n\nWHAT IT IS NOT\nThis is not a display-painting guide. There are no blends, glazes or\nobject-source lighting here. It is a method for getting an army finished to a\ngood tabletop standard, quickly.\n\nA NOTE ON PAINTS\nRecipes are written by colour and role — \"dark green contrast\", \"bone\ncontrast\" — so they work with Citadel Contrast, Army Painter Speedpaint or\nVallejo Xpress. Use whichever range you already own.\n\nDIGITAL DOWNLOAD\nNo physical item is shipped. Files are available immediately after purchase.\nFor personal use — print as many copies as you like for yourself.",
+      "descriptionBlocks": [
+        {
+          "type": "text",
+          "text": "Eight complete army colour recipes, plus the method that makes them fast."
+        },
+        {
+          "type": "text",
+          "text": "Paint a whole unit to tabletop standard without an airbrush. This is the slapchop method — black primer, two drybrush passes, one coat of contrast paint — written out step by step, with eight worked recipes you can follow straight off the page."
+        },
+        {
+          "type": "heading",
+          "text": "WHAT YOU GET"
+        },
+        {
+          "type": "list",
+          "items": [
+            "8-page PDF, instant download",
+            "Both A4 and US Letter (two files, same content)",
+            "8 full army recipes: grim green armour, crimson warrior, bone and rot, deep blue knight, rust and scrap, pale and ethereal, black armour, desert skirmisher",
+            "Every recipe broken down by part — armour, cloth, metal, leather, skin, weapon, highlight and base",
+            "A troubleshooting page: the five ways this goes wrong and how to fix each",
+            "A blank recipe sheet to photocopy and fill in for your own armies"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "WHO IT IS FOR"
+        },
+        {
+          "type": "text",
+          "text": "Anyone with more unpainted models than evenings. Beginners who want a method that works the first time, and experienced painters who want their units to match without keeping notes in their head."
+        },
+        {
+          "type": "heading",
+          "text": "WHAT IT IS NOT"
+        },
+        {
+          "type": "text",
+          "text": "This is not a display-painting guide. There are no blends, glazes or object-source lighting here. It is a method for getting an army finished to a good tabletop standard, quickly."
+        },
+        {
+          "type": "heading",
+          "text": "A NOTE ON PAINTS"
+        },
+        {
+          "type": "text",
+          "text": "Recipes are written by colour and role — \"dark green contrast\", \"bone contrast\" — so they work with Citadel Contrast, Army Painter Speedpaint or Vallejo Xpress. Use whichever range you already own."
+        },
+        {
+          "type": "heading",
+          "text": "DIGITAL DOWNLOAD"
+        },
+        {
+          "type": "text",
+          "text": "No physical item is shipped. Files are available immediately after purchase. For personal use — print as many copies as you like for yourself."
+        }
+      ],
       "tags": [
         "miniature painting",
         "speed paint guide",
@@ -190,8 +369,8 @@
         "miniature painter",
         "paint recipe"
       ],
-      "priceMinor": 700,
-      "currency": "gbp",
+      "priceMinor": 945,
+      "currency": "usd",
       "pageCount": 8,
       "pages": [
         {
@@ -254,78 +433,9 @@
           "size": "Letter",
           "label": "US Letter"
         }
-      ]
-    },
-    {
-      "type": "bundle",
-      "sku": "complete-bundle",
-      "name": "The Complete Set",
-      "subtitle": "3 guides · 20 pages · both paper sizes",
-      "blurb": "All three guides, both paper sizes, one download. Every card in the range for less than the price of two.",
-      "listingTitle": "The Complete Set",
-      "description": "All three guides, both paper sizes, one download. Every card in the range for less than the price of two.\n\nINCLUDED\n• Espresso Dial-In Troubleshooting Card — 6 pages\n• Keyboard Sound & Mod Chart — 6 pages\n• Miniature Speed-Paint Recipe Sheet — 8 pages\n\nEvery guide ships as two PDFs, A4 and US Letter, same content.\nInstant download. No physical item is shipped.",
-      "tags": [
-        "espresso guide",
-        "coffee cheat sheet",
-        "espresso dial in",
-        "home barista",
-        "barista gift",
-        "coffee bar decor",
-        "coffee lover gift",
-        "printable pdf",
-        "digital download",
-        "kitchen printable",
-        "coffee poster",
-        "espresso print",
-        "barista training"
       ],
-      "priceMinor": 1400,
-      "savingMinor": 400,
-      "currency": "gbp",
-      "pageCount": 20,
-      "badge": "Save £4",
-      "accent": "#14110F",
-      "icon": "layer-group",
-      "order": 4,
-      "status": "needs-content",
-      "contentGap": null,
-      "includes": [
-        "espresso-dial-in-card",
-        "keyboard-sound-mod-chart",
-        "miniature-speedpaint-recipe-sheet"
-      ],
-      "files": [
-        {
-          "name": "espresso-dial-in-card-A4.pdf",
-          "size": "A4",
-          "label": "A4"
-        },
-        {
-          "name": "espresso-dial-in-card-Letter.pdf",
-          "size": "Letter",
-          "label": "US Letter"
-        },
-        {
-          "name": "keyboard-sound-mod-chart-A4.pdf",
-          "size": "A4",
-          "label": "A4"
-        },
-        {
-          "name": "keyboard-sound-mod-chart-Letter.pdf",
-          "size": "Letter",
-          "label": "US Letter"
-        },
-        {
-          "name": "miniature-speedpaint-recipe-sheet-A4.pdf",
-          "size": "A4",
-          "label": "A4"
-        },
-        {
-          "name": "miniature-speedpaint-recipe-sheet-Letter.pdf",
-          "size": "Letter",
-          "label": "US Letter"
-        }
-      ]
+      "reviews": [],
+      "rating": null
     }
   ],
   "warnings": [

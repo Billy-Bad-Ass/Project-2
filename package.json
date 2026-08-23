@@ -25,7 +25,8 @@
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf:types": "wrangler types"
+    "cf:types": "wrangler types",
+    "previews:build": "node scripts/build-previews.mjs"
   },
   "dependencies": {
     "next": "^15.5.4",

@@ -16,12 +16,67 @@ import {
   splitPages,
   stripEmptyTableRows,
 } from './lib/note-parser.mjs';
+import { readReviews, summarise } from './lib/reviews.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const notesDir = join(root, 'content', 'products');
 const meta = JSON.parse(readFileSync(join(root, 'catalog', 'products.json'), 'utf8'));
 
 const warnings = [];
+
+/**
+ * The listing description is authored inside a fenced block, hard-wrapped to
+ * about 76 characters. Rendering that verbatim leaves mid-sentence line breaks
+ * wherever the column is narrower. Reflow paragraphs while keeping the bullets
+ * and the ALL-CAPS section headings the copy relies on.
+ */
+const BULLET = /^\s*[•\-*]\s+/;
+/** A short all-caps line is a section heading in this house style. */
+const isHeading = (line) =>
+  /^[A-Z0-9 ,'"—–-]{4,60}$/.test(line) && line === line.toUpperCase();
+
+function describeBlocks(description) {
+  const blocks = [];
+
+  for (const chunk of description.split(/\n\s*\n/)) {
+    const lines = chunk.split('\n').map((l) => l.trimEnd()).filter((l) => l.trim());
+    let index = 0;
+
+    // Headings are written immediately above their list with no blank line, so
+    // peel them off the front before classifying what follows.
+    while (index < lines.length && isHeading(lines[index].trim())) {
+      blocks.push({ type: 'heading', text: lines[index].trim() });
+      index++;
+    }
+
+    const rest = lines.slice(index);
+    if (rest.length === 0) continue;
+
+    if (rest.some((line) => BULLET.test(line))) {
+      const items = [];
+      let lead = [];
+
+      for (const line of rest) {
+        if (BULLET.test(line)) {
+          items.push(line.replace(BULLET, '').trim());
+        } else if (items.length) {
+          // Indented continuation of the previous bullet.
+          items[items.length - 1] += ` ${line.trim()}`;
+        } else {
+          lead.push(line.trim());
+        }
+      }
+
+      if (lead.length) blocks.push({ type: 'text', text: lead.join(' ') });
+      if (items.length) blocks.push({ type: 'list', items });
+      continue;
+    }
+
+    blocks.push({ type: 'text', text: rest.join(' ').replace(/\s+/g, ' ').trim() });
+  }
+
+  return blocks;
+}
 
 const notes = new Map();
 for (const file of readdirSync(notesDir).filter((f) => f.endsWith('.md'))) {
@@ -78,6 +133,7 @@ const products = (meta.products ?? [])
       blurb: entry.blurb,
       listingTitle: note.listing.title,
       description: note.listing.description,
+      descriptionBlocks: describeBlocks(note.listing.description),
       tags: note.listing.tags,
       priceMinor: entry.priceMinor,
       currency: meta.currency,
@@ -134,20 +190,52 @@ const bundles = (meta.bundles ?? []).map((entry) => {
   };
 });
 
+const { reviews, problems: reviewProblems } = readReviews(join(root, 'content', 'reviews'));
+warnings.push(...reviewProblems);
+
+const knownSkus = new Set([...products, ...bundles].map((i) => i.sku));
+for (const review of reviews) {
+  if (review.sku && !knownSkus.has(review.sku)) {
+    warnings.push(`reviews/${review.file}: sku "${review.sku}" is not in the catalogue`);
+  }
+}
+
+const reviewsBySku = {};
+for (const review of reviews) {
+  if (!knownSkus.has(review.sku)) continue;
+  (reviewsBySku[review.sku] ??= []).push({
+    rating: review.rating,
+    author: review.author,
+    location: review.location,
+    date: review.date,
+    verified: review.verified,
+    text: review.text,
+  });
+}
+
 const catalog = {
-  generatedFrom: 'content/products/*.md + catalog/products.json',
+  generatedFrom: 'content/products/*.md + catalog/products.json + content/reviews/*.md',
   merchant: meta.merchant,
   currency: meta.currency,
-  items: [...products, ...bundles].sort((a, b) => a.order - b.order),
+  items: [...products, ...bundles]
+    .sort((a, b) => a.order - b.order)
+    .map((item) => ({
+      ...item,
+      reviews: reviewsBySku[item.sku] ?? [],
+      rating: summarise(reviewsBySku[item.sku] ?? []),
+    })),
   warnings,
 };
 
 writeFileSync(join(root, 'catalog', 'generated.json'), `${JSON.stringify(catalog, null, 2)}\n`);
 
 console.log(`catalog: ${catalog.items.length} items -> catalog/generated.json`);
+const money = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: (catalog.currency ?? 'usd').toUpperCase(),
+});
 for (const item of catalog.items) {
-  const price = (item.priceMinor / 100).toFixed(2);
-  console.log(`  ${item.sku.padEnd(36)} £${price.padStart(6)}  ${item.status}`);
+  console.log(`  ${item.sku.padEnd(36)} ${money.format(item.priceMinor / 100).padStart(9)}  ${item.status}`);
 }
 if (warnings.length) {
   console.log(`\n${warnings.length} warning(s):`);

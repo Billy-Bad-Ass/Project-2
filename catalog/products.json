@@ -1,6 +1,6 @@
 {
-  "$comment": "Commercial metadata only. Titles, descriptions and tags are parsed out of content/products/*.md so the notes stay the single source of truth. Run `npm run catalog:build` after editing either.",
-  "currency": "gbp",
+  "$comment": "Commercial metadata only. Titles, descriptions and tags are parsed out of content/products/*.md so the notes stay the single source of truth. Run `npm run catalog:build` after editing either. `bundles` is intentionally empty: a bundle only makes sense once two or more guides serve the same buyer.",
+  "currency": "usd",
   "merchant": {
     "name": "BBA Network",
     "tagline": "Printable reference guides that actually fix the problem.",
@@ -9,25 +9,25 @@
   "products": [
     {
       "sku": "espresso-dial-in-card",
-      "priceMinor": 500,
+      "priceMinor": 945,
       "order": 1,
       "badge": "Most popular",
       "accent": "#7C3E12",
       "icon": "mug-hot",
-      "blurb": "Sour, bitter, or both at once — the card tells you what that means and exactly what to change next."
+      "blurb": "Sour, bitter, or both at once \u2014 the card tells you what that means and exactly what to change next."
     },
     {
       "sku": "keyboard-sound-mod-chart",
-      "priceMinor": 600,
+      "priceMinor": 945,
       "order": 2,
       "badge": null,
       "accent": "#1F4E5F",
       "icon": "keyboard",
-      "blurb": "Every common mod rated for effect, reliability, reversibility and cost — including the ones that will do nothing on your board."
+      "blurb": "Every common mod rated for effect, reliability, reversibility and cost \u2014 including the ones that will do nothing on your board."
     },
     {
       "sku": "miniature-speedpaint-recipe-sheet",
-      "priceMinor": 700,
+      "priceMinor": 945,
       "order": 3,
       "badge": null,
       "accent": "#3F5230",
@@ -35,17 +35,5 @@
       "blurb": "Eight army recipes and the slapchop method behind them. Whole units, tabletop standard, no airbrush."
     }
   ],
-  "bundles": [
-    {
-      "sku": "complete-bundle",
-      "title": "The Complete Set",
-      "priceMinor": 1400,
-      "order": 4,
-      "badge": "Save £4",
-      "accent": "#14110F",
-      "icon": "layer-group",
-      "includes": ["espresso-dial-in-card", "keyboard-sound-mod-chart", "miniature-speedpaint-recipe-sheet"],
-      "blurb": "All three guides, both paper sizes, one download. Every card in the range for less than the price of two."
-    }
-  ]
+  "bundles": []
 }

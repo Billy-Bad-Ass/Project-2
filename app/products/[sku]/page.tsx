@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { getItem, items, formatPrice } from '@/lib/catalog';
 import { Icon } from '@/app/components/Icon';
 import { BuyButton } from '@/app/components/BuyButton';
+import { PreviewGallery } from '@/app/components/PreviewGallery';
+import { Reviews } from '@/app/components/Reviews';
 
 type Params = { params: Promise<{ sku: string }> };
 
@@ -43,8 +45,26 @@ export default async function ProductPage({ params }: Params) {
           <p style={{ fontSize: '1.15rem', color: 'var(--muted)' }}>{item.subtitle}</p>
         )}
 
+        <PreviewGallery sku={item.sku} name={item.name} />
+
         <h2>What you get</h2>
-        <p className="product__desc">{item.description}</p>
+        <div className="product__desc">
+          {item.descriptionBlocks.map((block, index) => {
+            if (block.type === 'heading') {
+              return <h3 key={index} className="desc__heading">{block.text}</h3>;
+            }
+            if (block.type === 'list') {
+              return (
+                <ul key={index} className="desc__list">
+                  {block.items.map((entry) => (
+                    <li key={entry}>{entry}</li>
+                  ))}
+                </ul>
+              );
+            }
+            return <p key={index}>{block.text}</p>;
+          })}
+        </div>
 
         {item.pages && item.pages.length > 0 && (
           <>
@@ -75,6 +95,8 @@ export default async function ProductPage({ params }: Params) {
             </ul>
           </>
         )}
+
+        <Reviews reviews={item.reviews} rating={item.rating} productName={item.name} />
 
         {item.tags.length > 0 && (
           <div className="tags" style={{ marginTop: 28 }}>

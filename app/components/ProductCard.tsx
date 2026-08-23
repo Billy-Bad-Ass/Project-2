@@ -3,6 +3,7 @@ import type { CatalogItem } from '@/lib/catalog';
 import { formatPrice } from '@/lib/catalog';
 import { Icon } from './Icon';
 import { BuyButton } from './BuyButton';
+import { PreviewThumb } from './PreviewGallery';
 
 export function ProductCard({ item }: { item: CatalogItem }) {
   const isBundle = item.type === 'bundle';
@@ -10,6 +11,10 @@ export function ProductCard({ item }: { item: CatalogItem }) {
   return (
     <article className={`card${isBundle ? ' card--wide' : ''}`}>
       {item.badge && <span className="card__badge">{item.badge}</span>}
+
+      <Link href={`/products/${item.sku}`} className="card__preview-link" tabIndex={-1} aria-hidden="true">
+        <PreviewThumb sku={item.sku} name={item.name} />
+      </Link>
 
       <div className="card__icon" style={{ background: item.accent }}>
         <Icon name={item.icon} size={20} />

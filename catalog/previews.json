@@ -1,0 +1,104 @@
+{
+  "espresso-dial-in-card": [
+    {
+      "name": "espresso-dial-in-card-cover-1.png",
+      "kind": "cover",
+      "page": 1,
+      "heading": "Cover",
+      "width": 900,
+      "bytes": 58090
+    },
+    {
+      "name": "espresso-dial-in-card-page-2.png",
+      "kind": "page",
+      "page": 2,
+      "heading": "THE CARD",
+      "width": 720,
+      "bytes": 60320
+    },
+    {
+      "name": "espresso-dial-in-card-page-3.png",
+      "kind": "page",
+      "page": 3,
+      "heading": "The order, and why it is the order",
+      "width": 720,
+      "bytes": 76647
+    },
+    {
+      "name": "espresso-dial-in-card-page-4.png",
+      "kind": "page",
+      "page": 4,
+      "heading": "The decision tree",
+      "width": 720,
+      "bytes": 43626
+    }
+  ],
+  "keyboard-sound-mod-chart": [
+    {
+      "name": "keyboard-sound-mod-chart-cover-1.png",
+      "kind": "cover",
+      "page": 1,
+      "heading": "Cover",
+      "width": 900,
+      "bytes": 54805
+    },
+    {
+      "name": "keyboard-sound-mod-chart-page-2.png",
+      "kind": "page",
+      "page": 2,
+      "heading": "THE CHART",
+      "width": 720,
+      "bytes": 69683
+    },
+    {
+      "name": "keyboard-sound-mod-chart-page-3.png",
+      "kind": "page",
+      "page": 3,
+      "heading": "What is reliable, and what depends on your board",
+      "width": 720,
+      "bytes": 87035
+    },
+    {
+      "name": "keyboard-sound-mod-chart-page-4.png",
+      "kind": "page",
+      "page": 4,
+      "heading": "The order, and the expensive mistakes",
+      "width": 720,
+      "bytes": 93677
+    }
+  ],
+  "miniature-speedpaint-recipe-sheet": [
+    {
+      "name": "miniature-speedpaint-recipe-sheet-cover-1.png",
+      "kind": "cover",
+      "page": 1,
+      "heading": "Cover",
+      "width": 900,
+      "bytes": 64835
+    },
+    {
+      "name": "miniature-speedpaint-recipe-sheet-page-2.png",
+      "kind": "page",
+      "page": 2,
+      "heading": "The method",
+      "width": 720,
+      "bytes": 33892
+    },
+    {
+      "name": "miniature-speedpaint-recipe-sheet-page-3.png",
+      "kind": "page",
+      "page": 3,
+      "heading": "What you need",
+      "width": 720,
+      "bytes": 18204
+    },
+    {
+      "name": "miniature-speedpaint-recipe-sheet-page-4.png",
+      "kind": "page",
+      "page": 4,
+      "heading": "Recipes 1–4",
+      "width": 720,
+      "bytes": 46554
+    }
+  ]
+}

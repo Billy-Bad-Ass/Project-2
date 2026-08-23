@@ -59,9 +59,14 @@ test('a single purchase entitles exactly that guide, both paper sizes', () => {
   );
 });
 
-test('a bundle expands into every guide it contains', () => {
-  const result = ent.entitlementsFor(session({ metadata: { sku: 'complete-bundle' } }));
-  const bundle = catalog.getItem('complete-bundle');
+test('a bundle expands into every guide it contains', (t) => {
+  const bundle = catalog.bundles[0];
+  if (!bundle) {
+    t.skip('no bundles in the catalogue — expansion logic kept for when one returns');
+    return;
+  }
+
+  const result = ent.entitlementsFor(session({ metadata: { sku: bundle.sku } }));
 
   assert.equal(result.length, bundle.includes.length);
   assert.deepEqual(result.map((r) => r.sku).sort(), [...bundle.includes].sort());
