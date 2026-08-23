@@ -86,6 +86,18 @@ async function handleCompletedSession(partial: Stripe.Checkout.Session) {
   const entitlements = signEntitlements(session, baseUrl);
   const email = session.customer_details?.email ?? session.customer_email;
 
+  // One Stripe account can serve more than one business, and the endpoint gets
+  // every checkout on it — not just this store's. A session carrying none of
+  // our products belongs to something else, and delivering against it would
+  // send that customer a "here are your downloads" email listing nothing.
+  if (entitlements.length === 0) {
+    console.info(
+      `[webhook] ${session.id} contains no catalogue products — another product ` +
+        'on this Stripe account, ignoring',
+    );
+    return;
+  }
+
   console.info(
     `[webhook] paid ${session.id} · ${(session.amount_total ?? 0) / 100} ` +
       `${(session.currency ?? '').toUpperCase()} · ${entitlements.map((e) => e.sku).join(', ')}`,
