@@ -37,7 +37,7 @@
 
   "vars": {
     // Public, non-secret values only. Anything sensitive goes in `wrangler secret put`.
-    "NEXT_PUBLIC_SITE_URL": "https://bba-network-store.workers.dev",
+    "NEXT_PUBLIC_SITE_URL": "https://bba-network-store.bbacentralworkspace.workers.dev",
     "STRIPE_AUTOMATIC_TAX": "false"
   }
 }
