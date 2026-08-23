@@ -244,7 +244,17 @@ p { margin: 0 0 1em; }
 
 .product__body { max-width: var(--measure); }
 .product__body h2 { margin-top: 36px; }
-.product__desc { white-space: pre-wrap; font-size: 0.98rem; }
+.product__desc { font-size: 0.98rem; }
+.desc__heading {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 26px 0 8px;
+}
+.desc__list { padding-left: 18px; margin: 0 0 14px; }
+.desc__list li { margin-bottom: 6px; }
 
 .buybox {
   position: sticky; top: 92px;
@@ -308,3 +318,131 @@ p { margin: 0 0 1em; }
 .prose h2 { margin-top: 34px; }
 .prose ul { padding-left: 20px; }
 .prose li { margin-bottom: 7px; }
+
+/* ---------------------------------------------------------------- shop -- */
+
+.card__preview-link {
+  display: block;
+  margin: -24px -24px 18px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--rule);
+  background: #fff;
+}
+.card__preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* No aspect-ratio crop: these are page crops of a known shape, and cover
+     was cutting the left and right margins off the page. */
+}
+
+.gallery { margin: 0 0 8px; }
+
+.gallery__cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.gallery__pages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* Interior previews are top crops. The fade makes the cut read as deliberate
+   rather than as a broken image. */
+.gallery__page {
+  position: relative;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #fff;
+}
+.gallery__page img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.gallery__page::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 42%;
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0%), rgb(255 255 255 / 96%));
+  pointer-events: none;
+}
+.gallery__label {
+  position: absolute;
+  left: 8px;
+  bottom: 7px;
+  z-index: 1;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  color: #6B6259;
+  background: rgb(255 255 255 / 88%);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.gallery__note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 10px 0 0;
+}
+
+/* ------------------------------------------------------------- reviews -- */
+
+.reviews { margin-top: 40px; }
+.reviews__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.reviews__rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.reviews__rating strong { color: var(--ink); font-size: 1.05rem; }
+
+.reviews__empty {
+  border: 1px dashed var(--rule);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+.reviews__list { list-style: none; padding: 0; margin: 18px 0 0; }
+.reviews__list > li {
+  border-top: 1px solid var(--rule);
+  padding: 18px 0;
+}
+.review__head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.review__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ok);
+}
+.review__text { margin: 0 0 8px; font-size: 0.97rem; }
+.review__by { margin: 0; font-size: 0.82rem; color: var(--muted); }
+
+.stars { color: var(--accent); letter-spacing: 1px; font-size: 0.95rem; }
+.stars__empty { color: var(--rule); }

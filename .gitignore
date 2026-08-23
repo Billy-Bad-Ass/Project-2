@@ -15,6 +15,10 @@ next-env.d.ts.timestamp
 .dev.vars.*
 !.dev.vars.example
 
+# Product previews in public/previews/ are generated but committed — they are
+# shop images, and a deploy that lacked them would show broken products.
+# Rebuild with `npm run previews:build`.
+
 # generated product files — rebuild with `npm run pdf:build`
 private/downloads/*.pdf
 private/downloads/*.debug.html

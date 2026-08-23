@@ -49,15 +49,29 @@ function renderMarkdown(md) {
 /** The note's own cover page opens by restating the title in bold; the cover
  *  template already sets it as the <h1>, so drop the duplicate. */
 function stripDuplicateTitle(markdown, title) {
-  const normalise = (v) => v.replace(/[^a-z0-9]+/gi, '').toLowerCase();
+  const words = (v) =>
+    new Set(
+      v
+        .toLowerCase()
+        .split(/[^a-z0-9]+/i)
+        .filter(Boolean),
+    );
+
   const lines = markdown.split(/\r?\n/);
   const first = lines.findIndex((l) => l.trim() !== '');
   if (first === -1) return markdown;
 
   const candidate = lines[first].trim().replace(/^\*\*|\*\*$/g, '').trim();
-  if (normalise(candidate) && normalise(candidate) === normalise(title)) {
-    return lines.slice(first + 1).join('\n').trim();
-  }
+  const candidateWords = words(candidate);
+  const titleWords = words(title);
+
+  // A restatement contributes no word the title does not already have, so
+  // "ESPRESSO DIAL-IN CARD" is dropped under "Espresso Dial-In Troubleshooting
+  // Card" while a genuine strapline survives.
+  const isRestatement =
+    candidateWords.size > 0 && [...candidateWords].every((word) => titleWords.has(word));
+
+  if (isRestatement) return lines.slice(first + 1).join('\n').trim();
   return markdown;
 }
 
