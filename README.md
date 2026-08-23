@@ -1,8 +1,9 @@
 # BBA Network — digital marketplace
 
-A storefront for selling printable reference guides as digital downloads. Next.js,
-Stripe Checkout, PDFs generated from markdown, and an agent fleet that researches the
-market, refreshes listings and verifies releases on a schedule.
+A storefront for selling printable reference guides as digital downloads. Next.js on
+Cloudflare Workers, Stripe Checkout, PDFs generated from markdown and served from R2,
+and an agent fleet that researches the market, refreshes listings and verifies
+releases on a schedule.
 
 ```
 content/products/*.md  →  catalog/generated.json  →  PDFs + storefront + Stripe
@@ -41,6 +42,8 @@ Then buy something with card `4242 4242 4242 4242`, any future expiry, any CVC.
 | `app/` | The storefront. Server components throughout, one client component. |
 | `lib/download-token.ts` | Signed, expiring download links. |
 | `private/downloads/` | Generated PDFs. Outside `public/` on purpose. |
+| `lib/storage.ts` | Reads product files from R2 on Workers, from disk locally. |
+| `wrangler.jsonc` | Cloudflare bindings and config. |
 | `.claude/` | Subagents, workflows and slash commands — see [docs/AGENTS.md](docs/AGENTS.md). |
 
 ## How delivery works
@@ -70,7 +73,10 @@ trusted from a stored flag.
 | `npm run catalog:build` | Rebuild `catalog/generated.json` from the notes |
 | `npm run pdf:build` | Rebuild the product PDFs |
 | `npm run pdf:check` | Verify every PDF matches the page count its listing promises |
+| `npm run pdf:upload` | Upload the PDFs to R2 (`-- --local` to seed the dev bucket) |
 | `npm run stripe:sync` | Dry-run the Stripe catalogue sync (`-- --apply` to write) |
+| `npm run cf:preview` | Run the real Workers runtime locally |
+| `npm run cf:deploy` | Build and deploy to Cloudflare |
 | `npm run workflows:check` | Validate the agent workflow scripts |
 | `npm run agents:bootstrap` | Clone the reference repos into `vendor/` |
 
@@ -85,28 +91,38 @@ guardrails.
 
 ## Deploying
 
-Any Node host works; the store is a stock Next.js app. On Vercel:
+Runs on **Cloudflare Workers** with the PDFs in a private **R2** bucket:
 
-1. Import the repo, framework preset **Next.js**, no build overrides needed.
-2. Set every variable from `.env.example` in the project settings.
-3. Add a Stripe webhook at `https://<domain>/api/stripe/webhook` subscribed to
-   `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
-   `checkout.session.async_payment_failed` and `charge.refunded`. Put its signing
-   secret in `STRIPE_WEBHOOK_SECRET`.
-4. `NEXT_PUBLIC_SITE_URL` must be the real domain — a wrong value silently breaks the
-   download links in delivery emails while the site itself looks fine.
+```bash
+npx wrangler login
+npx wrangler r2 bucket create bba-network-downloads
+npx wrangler r2 bucket create bba-network-downloads-preview
+npx wrangler secret put STRIPE_SECRET_KEY        # and the other secrets
+npm run pdf:build && npm run pdf:upload
+npm run cf:deploy
+curl https://<worker-url>/api/health             # must report ok:true, backend:r2
+```
 
-The PDFs are build output and gitignored, so the deploy must run `npm run pdf:build`.
-`next.config.mjs` already bundles `private/downloads/` with the download function.
+Full instructions, costs and domain registration: **[docs/CLOUDFLARE.md](docs/CLOUDFLARE.md)**.
 
-See [docs/RUNBOOK.md](docs/RUNBOOK.md) for going live, and
-[docs/DECISIONS.md](docs/DECISIONS.md) for why things are built this way.
+`npm run pdf:upload` is not optional — Workers has no filesystem, so skipping it
+ships a store that takes money and then 500s on every download. `/api/health`
+catches exactly that.
+
+A Node host (Vercel, a container) also works unchanged: there the filesystem
+fallback in `lib/storage.ts` is the live path, and `next.config.mjs` already bundles
+`private/downloads/` with the download function.
+
+See [docs/RUNBOOK.md](docs/RUNBOOK.md) for going live, [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md)
+for hosting, and [docs/DECISIONS.md](docs/DECISIONS.md) for why things are built this way.
 
 ## Status
 
 | | |
 | --- | --- |
 | Storefront, checkout, delivery | Working end to end |
+| Cloudflare Workers + R2 | Verified on the real runtime; buckets not yet created |
+| Domain | Not registered yet — see [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md) |
 | Stripe catalogue | Seeded in **test mode**; one command to replicate to live |
 | Espresso and keyboard guides | Complete, 6 pages each, both paper sizes |
 | Miniature guide | **Recipe tables are missing** — see `docs/RUNBOOK.md` |

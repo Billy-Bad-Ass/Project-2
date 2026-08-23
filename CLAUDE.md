@@ -31,6 +31,9 @@ npm run pdf:check       # page counts must match what the listings promise
 npm test
 ```
 
+If it is already deployed, also `npm run pdf:upload && npm run cf:deploy` — the
+PDFs live in R2, not in the bundle, so a deploy alone does not update them.
+
 ## Rules that are load-bearing
 
 - **Never invent product content.** A wrong paint name, temperature or click count in a
@@ -43,6 +46,11 @@ npm test
 - **The three download gates stay.** `app/api/download/route.ts` checks signature,
   Stripe-says-paid, and entitlement. Removing any one is a security regression.
 - **Prices are pence.** `500` is £5.00.
+- **The R2 bucket stays private.** No public bucket URL. The paywall is the download
+  route; anything reachable around it is free product.
+- **Stripe calls use the async/fetch forms** (`constructEventAsync`,
+  `createFetchHttpClient`). Workers has no sync crypto and no Node http stack, and
+  the sync forms fail only at runtime on a real payment.
 
 ## Known gaps
 

@@ -90,7 +90,40 @@ Before switching the deployed environment to the live key:
       created with `tax_behavior: inclusive`.
 - [ ] You have done one live £5 purchase yourself and refunded it
 
-## 3. Delivery email
+## 3. Hosting on Cloudflare
+
+Full guide: **[docs/CLOUDFLARE.md](CLOUDFLARE.md)**. The short version and the two
+things that catch people out:
+
+```bash
+npx wrangler login
+npx wrangler r2 bucket create bba-network-downloads
+npx wrangler r2 bucket create bba-network-downloads-preview
+npx wrangler secret put STRIPE_SECRET_KEY        # + WEBHOOK_SECRET, DOWNLOAD_SIGNING_SECRET
+npm run pdf:build && npm run pdf:upload
+npm run cf:deploy
+curl https://<worker-url>/api/health              # ok:true, backend:r2, missing:[]
+```
+
+**Catch one: `npm run pdf:upload` is part of every deploy.** Workers has no
+filesystem. Deploy without it and the store takes money, then 500s on the download.
+
+**Catch two: the R2 bucket must stay private.** No public bucket URL, no custom
+domain on the bucket. Everything in it is paid product and the paywall is the
+download route.
+
+### The domain
+
+Not registered yet. Cloudflare dashboard → Domain Registration → Register Domain
+(sold at cost, WHOIS privacy free). Then attach it to the Worker under
+Settings → Domains & Routes, update `NEXT_PUBLIC_SITE_URL` in `wrangler.jsonc`,
+redeploy, and repoint the Stripe webhook. Steps in detail in
+[docs/CLOUDFLARE.md](CLOUDFLARE.md).
+
+Until then the `*.workers.dev` URL runs the full payment path, test purchase
+included.
+
+## 4. Delivery email
 
 Optional. Without it the success page is the only delivery route, which works but
 means a buyer who closes the tab has to email you.
@@ -99,11 +132,13 @@ Set `RESEND_API_KEY` and `DELIVERY_FROM_EMAIL` (a verified sender on your domain
 `lib/email.ts` sends through Resend over plain `fetch` — no SDK dependency. Any other
 provider is a one-function swap.
 
-## 4. Routine operations
+## 5. Routine operations
 
 | When | Do |
 | --- | --- |
 | Content changed | `/rebuild` — or `npm run catalog:build && npm run pdf:build && npm run pdf:check` |
+| Content changed, deployed | Also `npm run pdf:upload` then `npm run cf:deploy` |
+| Anything looks wrong in prod | `curl https://<domain>/api/health` first |
 | Price changed | Edit `catalog/products.json`, rebuild, `stripe:sync` dry run, then apply |
 | Before deploying | `/release-check` |
 | Weekly | The market-intel and revenue-digest Actions run themselves; read the PR and issue |
@@ -111,7 +146,7 @@ provider is a one-function swap.
 | Buyer reports an error in a guide | `content-editor` agent. Buyers get corrected versions free. |
 | Expired link ticket | Send them `/success?session_id=<their reference>` |
 
-## 5. Optional: Buzz for human/agent coordination
+## 6. Optional: Buzz for human/agent coordination
 
 [block/buzz](https://github.com/block/buzz) is a self-hostable workspace where people
 and agents share the same rooms, on a Nostr relay you own. It is cloned to
@@ -122,7 +157,7 @@ It is worth it if you get to the point of several agents working concurrently an
 want one audited event log of what they did. Until then the GitHub Actions PRs and
 issues are the coordination surface, and they are enough.
 
-## 6. Things deliberately not built
+## 7. Things deliberately not built
 
 - **An orders database.** Stripe is the record. This removes a whole class of
   consistency bug, and refunds revoke access for free. The cost is that link recovery
