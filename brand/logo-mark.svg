@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BBA Network mark">
+  <title>BBA Network</title>
+  <rect width="64" height="64" rx="16" fill="#14110F"/>
+  <path d="M16 19h13a7 7 0 0 1 2.1 13.7A7.5 7.5 0 0 1 29.5 46H16V19Zm6 5v6.5h6.5a3.25 3.25 0 0 0 0-6.5H22Zm0 11.5V42h7a3.25 3.25 0 0 0 0-6.5h-7Z" fill="#FBF7F0"/>
+  <rect x="39" y="19" width="7" height="27" rx="1.5" fill="#C2410C"/>
+</svg>

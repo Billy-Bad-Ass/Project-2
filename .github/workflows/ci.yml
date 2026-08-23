@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Build, test and generate PDFs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate agent workflow scripts
+        run: npm run workflows:check
+
+      - name: Build catalogue
+        run: npm run catalog:build
+
+      - name: Fail if the generated catalogue is out of date
+        run: |
+          if ! git diff --quiet -- catalog/generated.json; then
+            echo "::error::catalog/generated.json is stale. Run 'npm run catalog:build' and commit the result."
+            git diff -- catalog/generated.json
+            exit 1
+          fi
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Install Chromium for PDF generation
+        run: npx playwright install --with-deps chromium
+
+      - name: Build product PDFs
+        run: npm run pdf:build
+
+      - name: Check every PDF matches the page count its listing promises
+        run: node scripts/check-pdfs.mjs
+
+      - name: Build the storefront
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://example.invalid
+
+      - name: Upload PDFs for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-pdfs
+          path: private/downloads/*.pdf
+          retention-days: 14
+
+  secrets:
+    name: Check no secrets were committed
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Scan for Stripe and provider keys
+        run: |
+          if git grep -nE 'sk_(live|test)_[A-Za-z0-9]{16}|whsec_[A-Za-z0-9]{16}|re_[A-Za-z0-9]{20}' -- . ':!.env.example' ':!.github/workflows'; then
+            echo "::error::A live-looking secret is committed. Rotate it, then remove it from history."
+            exit 1
+          fi
+          echo "No committed secrets found."

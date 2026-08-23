@@ -1,0 +1,59 @@
+# BBA Network store — working notes
+
+A Next.js storefront selling printable reference guides as digital downloads, with an
+agent fleet that maintains it. Read `docs/AGENTS.md` before doing agent work and
+`docs/DECISIONS.md` before changing architecture.
+
+## The one thing to understand first
+
+`content/products/*.md` is the source of truth. Each note holds the frontmatter, the
+printable pages **and** the marketplace listing copy. Everything else is derived:
+
+```
+content/products/*.md + catalog/products.json
+        │  npm run catalog:build
+        ▼
+catalog/generated.json          ← committed, never hand-edited
+        ├──► the storefront (lib/catalog.ts)
+        ├──► the PDFs        (npm run pdf:build)
+        └──► Stripe          (npm run stripe:sync)
+```
+
+Editing `catalog/generated.json` directly is always wrong — the next build overwrites
+it, and CI fails if the committed copy is stale.
+
+## After changing content
+
+```bash
+npm run catalog:build   # read the warnings, they are the point
+npm run pdf:build
+npm run pdf:check       # page counts must match what the listings promise
+npm test
+```
+
+## Rules that are load-bearing
+
+- **Never invent product content.** A wrong paint name, temperature or click count in a
+  reference card is the worst failure this product line has. Flag gaps as `contentGap`
+  in the note's frontmatter instead.
+- **Page count is a promise.** Listings say "6-page PDF" and buyers count. If a page
+  will not fit, trim the note — do not lower `MIN_ZOOM` in `scripts/build-pdfs.mjs`.
+- **Never write to live-mode Stripe** without an explicit human go-ahead.
+  `scripts/stripe-sync.mjs` guards this; do not route around it.
+- **The three download gates stay.** `app/api/download/route.ts` checks signature,
+  Stripe-says-paid, and entitlement. Removing any one is a security regression.
+- **Prices are pence.** `500` is £5.00.
+
+## Known gaps
+
+- The logo in `brand/` and `public/` is a **placeholder** — see `brand/README.md`.
+- `miniature-speedpaint-recipe-sheet` is missing its eight recipe tables; they exported
+  empty. See `docs/RUNBOOK.md`. Do not fill them in from general knowledge.
+
+## Conventions
+
+- British spelling in all customer-facing copy and product content.
+- Server components by default; `BuyButton` is the only client component.
+- Hand-written CSS with custom properties — no framework, and both light and dark
+  values for every colour token.
+- Comments explain *why*, not what. The codebase is deliberately light on them.

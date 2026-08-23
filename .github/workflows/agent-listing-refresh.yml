@@ -1,0 +1,60 @@
+name: Agent · Listing refresh
+
+# Rewrites marketplace listing copy and fact-checks it against the actual notes.
+on:
+  schedule:
+    - cron: "0 9 1 * *" # 09:00 UTC on the 1st of each month
+  workflow_dispatch:
+    inputs:
+      skus:
+        description: 'Optional JSON array of skus to refresh instead of all of them'
+        required: false
+        default: ''
+
+concurrency:
+  group: agent-listing-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Refresh the listings
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            /listing-refresh ${{ inputs.skus }}
+
+            Afterwards run `npm run catalog:build && npm test` and make sure both pass —
+            the test suite enforces the 20-character tag limit.
+
+            If any listing changed, commit to a branch named
+            agent/listing-refresh-${{ github.run_number }} and open a pull request
+            explaining, per product, what changed and why.
+
+            If the fact-check found any claim the product does not actually deliver,
+            **do not open the PR**. Open an issue instead, titled
+            "Listing accuracy problem", listing each bad claim. Copy that overclaims
+            does more damage to this range than copy that is merely dull.
+
+            If nothing changed, do nothing and say so.
+          claude_args: |
+            --allowed-tools Read,Write,Edit,Bash,Grep,Glob,WebSearch,WebFetch,Workflow,Agent
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}

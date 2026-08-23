@@ -1,0 +1,39 @@
+{
+  "name": "bba-network-store",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BBA Network — digital marketplace for printable reference guides",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "pdf:build": "node scripts/build-pdfs.mjs",
+    "stripe:sync": "node scripts/stripe-sync.mjs",
+    "stripe:listen": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
+    "agents:bootstrap": "bash scripts/bootstrap-agents.sh",
+    "test": "node --import ./tests/register.mjs --test tests/*.test.mjs",
+    "catalog:build": "node scripts/build-catalog.mjs",
+    "prebuild": "node scripts/build-catalog.mjs",
+    "workflows:check": "node scripts/check-workflows.mjs",
+    "pdf:check": "node scripts/check-pdfs.mjs"
+  },
+  "dependencies": {
+    "next": "^15.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "stripe": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "marked": "^15.0.6",
+    "playwright": "^1.49.1",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run dev)",
+      "Bash(npm test)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run lint)",
+      "Bash(npm run catalog:build)",
+      "Bash(npm run pdf:build)",
+      "Bash(npm run workflows:check)",
+      "Bash(npm run agents:bootstrap)",
+      "Bash(npm run stripe:sync)",
+      "Bash(node scripts/*.mjs)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git grep:*)",
+      "Read(//home/user/Project-2/**)",
+      "Edit(//home/user/Project-2/content/**)",
+      "Edit(//home/user/Project-2/catalog/products.json)",
+      "Edit(//home/user/Project-2/app/**)",
+      "Edit(//home/user/Project-2/lib/**)",
+      "Edit(//home/user/Project-2/docs/**)",
+      "WebSearch",
+      "WebFetch",
+      "mcp__stripe__stripe_api_read",
+      "mcp__stripe__stripe_api_search",
+      "mcp__stripe__stripe_analytics",
+      "mcp__stripe__search_stripe_documentation",
+      "mcp__firecrawl__firecrawl_search",
+      "mcp__firecrawl__firecrawl_scrape"
+    ],
+    "deny": [
+      "Read(//home/user/Project-2/.env)",
+      "Read(//home/user/Project-2/.env.local)",
+      "Read(//home/user/Project-2/.env.*.local)",
+      "Bash(npm run stripe:sync -- --apply)",
+      "Bash(curl:*)",
+      "Bash(rm -rf:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "mcp__stripe__stripe_api_write",
+      "mcp__stripe__create_refund"
+    ]
+  },
+  "env": {
+    "PLAYWRIGHT_BROWSERS_PATH": "/opt/pw-browsers",
+    "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1"
+  }
+}
