@@ -68,6 +68,21 @@ Buy with `4242 4242 4242 4242`. You are checking four things:
 Then check the links **fail** correctly: edit a character in a token (403), and confirm
 `/api/download` with no token gives 400.
 
+### A shared Stripe account
+
+`acct_1U7Km3R7EyLACZsr` also carries **Website Health Check**, a separate
+product. That is fine, but it has two consequences worth knowing:
+
+- **The webhook endpoint receives every checkout on the account**, including
+  the audit's. Sessions containing none of this catalogue are recognised and
+  ignored — without that, an audit customer would be emailed a download list
+  with nothing in it. `tests/entitlements.test.mjs` covers the case.
+- **The revenue digest counts only this store's skus.** Check any figure you
+  compare against the Stripe dashboard, which shows both businesses together.
+
+If the two ever need separate reporting, payouts or statement descriptors, move
+one to its own Stripe account rather than trying to separate them by metadata.
+
 ### Then go live
 
 ```bash

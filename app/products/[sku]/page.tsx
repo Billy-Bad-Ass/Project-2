@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getItem, items, formatPrice } from '@/lib/catalog';
+import { getItem, items, isSellable, formatPrice } from '@/lib/catalog';
 import { Icon } from '@/app/components/Icon';
 import { BuyButton } from '@/app/components/BuyButton';
+import { merchant } from '@/lib/catalog';
 import { PreviewGallery } from '@/app/components/PreviewGallery';
 import { Reviews } from '@/app/components/Reviews';
 
@@ -108,6 +109,23 @@ export default async function ProductPage({ params }: Params) {
       </div>
 
       <aside>
+        {!isSellable(item) ? (
+          <div className="buybox">
+            <h2 style={{ fontSize: '1.05rem', margin: '0 0 8px' }}>Not on sale yet</h2>
+            <p style={{ fontSize: '0.93rem', color: 'var(--muted)', margin: 0 }}>
+              This guide is still being finished, so it cannot be bought. The listing
+              describes content the file does not contain yet, and selling it in that
+              state would not be honest.
+            </p>
+            <p style={{ fontSize: '0.93rem', color: 'var(--muted)', margin: '12px 0 0' }}>
+              Want it when it lands?{' '}
+              <a href={`mailto:${merchant.supportEmail}?subject=${encodeURIComponent(`Tell me when ${item.name} is ready`)}`}>
+                Email us
+              </a>{' '}
+              and you will be the first told.
+            </p>
+          </div>
+        ) : (
         <div className="buybox">
           <p className="buybox__price" style={{ margin: 0 }}>
             {formatPrice(item.priceMinor, item.currency)}
@@ -131,6 +149,7 @@ export default async function ProductPage({ params }: Params) {
             <Icon name="lock" size={11} /> Secure checkout by Stripe
           </p>
         </div>
+        )}
 
         <div className="buybox" style={{ marginTop: 16, position: 'static' }}>
           <h3 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--muted)' }}>

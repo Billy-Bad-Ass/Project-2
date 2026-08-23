@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { items } from '@/lib/catalog';
+import { items, listed } from '@/lib/catalog';
 import { productFileExists, storageBackend } from '@/lib/storage';
 import { configuredSiteUrl } from '@/lib/site';
 import { stripe } from '@/lib/stripe';
@@ -68,7 +68,11 @@ export async function GET() {
       config,
       stripe: stripeStatus,
       warnings,
-      catalogue: items.map((item) => ({ sku: item.sku, status: item.status })),
+      catalogue: items.map((item) => ({
+        sku: item.sku,
+        status: item.status,
+        onSale: listed.some((l) => l.sku === item.sku),
+      })),
     },
     { status: ok ? 200 : 503, headers: { 'cache-control': 'no-store' } },
   );
@@ -88,7 +92,10 @@ type StripeStatus = {
  * valid key for the wrong account authenticates fine and finds nothing.
  */
 async function checkStripe(): Promise<StripeStatus> {
-  const skus = items.map((item) => item.sku);
+  // Only what is actually on sale. A product held back for a content gap has
+  // its Stripe price archived on purpose, and counting it here would report a
+  // deliberate state as a fault.
+  const skus = listed.map((item) => item.sku);
 
   if (!process.env.STRIPE_SECRET_KEY) {
     return { reachable: false, pricesResolved: 0, pricesExpected: skus.length, error: 'no key set' };

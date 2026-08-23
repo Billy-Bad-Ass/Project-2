@@ -1,9 +1,10 @@
-import { items, singles, bundles, merchant } from '@/lib/catalog';
+import { items, listed, bundles, merchant } from '@/lib/catalog';
 import { ProductCard } from './components/ProductCard';
 import { Icon } from './components/Icon';
 
 export default function HomePage() {
-  const totalPages = singles.reduce((sum, item) => sum + item.pageCount, 0);
+  const forSale = listed.filter((item) => item.type === 'single');
+  const totalPages = forSale.reduce((sum, item) => sum + item.pageCount, 0);
 
   return (
     <>
@@ -23,7 +24,7 @@ export default function HomePage() {
 
         <ul className="hero__points">
           <li><Icon name="check" size={14} /> A4 and US Letter, same content</li>
-          <li><Icon name="check" size={14} /> {totalPages} pages across {singles.length} guides</li>
+          <li><Icon name="check" size={14} /> {totalPages} pages across {forSale.length} guides</li>
           <li><Icon name="check" size={14} /> Yours to print as often as you like</li>
         </ul>
       </section>
@@ -35,7 +36,7 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid--3">
-          {singles.map((item) => (
+          {forSale.map((item) => (
             <ProductCard key={item.sku} item={item} />
           ))}
         </div>
@@ -83,7 +84,7 @@ export default function HomePage() {
         <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>
           Questions before buying? <a href={`mailto:${merchant.supportEmail}`}>{merchant.supportEmail}</a>
           {' · '}
-          {items.length} products in the catalogue.
+          {forSale.length} {forSale.length === 1 ? 'guide' : 'guides'} available.
         </p>
       </section>
     </>

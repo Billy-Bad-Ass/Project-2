@@ -74,11 +74,25 @@ const catalog = generated as unknown as {
 export const merchant = catalog.merchant;
 export const currency = catalog.currency;
 
-/** Everything on sale, in display order. */
+/** Everything in the catalogue, in display order — sellable or not. */
 export const items: CatalogItem[] = [...catalog.items].sort((a, b) => a.order - b.order);
+
+/**
+ * A product with a known content gap must not be buyable.
+ *
+ * Tying this to `status` rather than a separate flag means the gap that the
+ * build already reports is the same thing that blocks the sale — and the
+ * product becomes sellable again the moment the note is finished, with nothing
+ * else to remember. Archiving the Stripe price alone would not do it: checkout
+ * falls back to inline price data precisely so a fresh account can still sell.
+ */
+export const isSellable = (item: CatalogItem) => item.status === 'ready';
 
 export const singles = items.filter((i) => i.type === 'single');
 export const bundles = items.filter((i) => i.type === 'bundle');
+
+/** What the shop actually offers. */
+export const listed = items.filter(isSellable);
 
 export function getItem(sku: string): CatalogItem | undefined {
   return items.find((i) => i.sku === sku);

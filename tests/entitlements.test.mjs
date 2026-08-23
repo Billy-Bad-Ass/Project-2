@@ -80,6 +80,33 @@ test('an unknown sku entitles nothing', () => {
   assert.deepEqual(ent.entitlementsFor(session({ metadata: { sku: 'not-a-product' } })), []);
 });
 
+/**
+ * One Stripe account can serve several businesses — this one also sells a
+ * Website Health Check — and the webhook endpoint receives every checkout on
+ * the account. A paid session for something else must resolve to nothing, so
+ * the delivery paths can recognise it and stay out of the way.
+ */
+test('a paid session for another product on the same account entitles nothing', () => {
+  const foreign = session({
+    metadata: {},
+    line_items: {
+      data: [
+        {
+          price: {
+            lookup_key: null,
+            product: { id: 'prod_websiteaudit', metadata: {} },
+          },
+        },
+      ],
+    },
+  });
+
+  assert.equal(ent.isPaid(foreign), true, 'the payment itself is genuine');
+  assert.deepEqual(ent.skusFor(foreign), []);
+  assert.deepEqual(ent.entitlementsFor(foreign), []);
+  assert.deepEqual(ent.signEntitlements(foreign, 'https://store.example'), []);
+});
+
 test('signEntitlements mints one verifiable link per file', async () => {
   const { verifyDownloadToken } = await import('../lib/download-token.ts');
   const signed = ent.signEntitlements(

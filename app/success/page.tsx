@@ -59,6 +59,26 @@ export default async function SuccessPage({ searchParams }: Params) {
   const entitlements = signEntitlements(session, baseUrl);
   const email = session.customer_details?.email;
 
+  // Same Stripe account, different product: a paid session that contains none
+  // of this catalogue is not ours to fulfil, and an empty download list would
+  // read as a failed order rather than a wrong address.
+  if (entitlements.length === 0) {
+    return (
+      <Problem title="That order is not from this shop">
+        <p>
+          The payment went through, but it does not include any of the guides sold
+          here — it is most likely for another BBA Network product. Nothing has
+          gone wrong with your purchase.
+        </p>
+        <p style={{ marginBottom: 0 }}>
+          If you were expecting a download, email{' '}
+          <a href={`mailto:${merchant.supportEmail}`}>{merchant.supportEmail}</a>{' '}
+          with reference <code>{session.id}</code>.
+        </p>
+      </Problem>
+    );
+  }
+
   return (
     <div className="wrap receipt">
       <div className="notice notice--ok">
