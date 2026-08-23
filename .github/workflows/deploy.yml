@@ -182,6 +182,9 @@ jobs:
               echo "- A \`config\` value is \`false\` -> that secret is not set on the Worker."
               echo "  Add it in the Cloudflare dashboard: Workers & Pages -> bba-network-store -> Settings -> Variables and Secrets."
               echo "- \`\"backend\": \"filesystem\"\` -> the R2 binding is not attached."
+              echo "- \`stripe.reachable: false\` -> the Stripe key is missing or does not authenticate."
+              echo "- \`stripe.pricesResolved: 0\` -> the key works but belongs to an account with none"
+              echo "  of the catalogue's products on it. Check you are not using a sandbox key."
             elif [ "${{ steps.health.outputs.skipped }}" = "true" ]; then
               echo "Health check skipped — no URL available."
             elif [ "${{ job.status }}" = "success" ]; then
