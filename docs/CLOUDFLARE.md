@@ -27,7 +27,36 @@ download route — a public bucket URL bypasses it entirely.
 
 R2's free egress is the reason this is a better fit than S3 for selling files.
 
-## First deploy
+## Deploying without a terminal
+
+Everything below can be done from a browser — including an iPad. The
+**Deploy to Cloudflare** GitHub Action does the parts that would otherwise need
+a command line: it creates the R2 buckets, builds the PDFs, uploads them and
+deploys the Worker.
+
+1. **Cloudflare → My Profile → API Tokens → Create Token**, using the
+   *Edit Cloudflare Workers* template. Add **R2 → Edit** to its permissions so
+   it can create buckets and upload the PDFs. Copy the token once — it is not
+   shown again.
+2. **Cloudflare → Workers & Pages.** Copy the **Account ID** from the right-hand
+   sidebar, and note your `workers.dev` subdomain.
+3. **GitHub → Settings → Secrets and variables → Actions.** Add two repository
+   *secrets*: `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
+4. **GitHub → Actions → Deploy to Cloudflare → Run workflow.** The job summary
+   prints the deployed URL and the health result.
+5. **Add the Worker's own secrets** in the Cloudflare dashboard —
+   Workers & Pages → `bba-network-store` → Settings → Variables and Secrets →
+   *Add*, type **Secret**: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
+   `DOWNLOAD_SIGNING_SECRET`. The Worker has to exist first, so this comes after
+   the first deploy.
+6. **GitHub → Settings → Secrets and variables → Actions → Variables.** Add
+   `SITE_URL` set to the deployed origin, then run the workflow once more —
+   `NEXT_PUBLIC_SITE_URL` is inlined at build time, so it needs a rebuild rather
+   than just a variable change.
+
+The rest of this document is the equivalent from a terminal.
+
+## First deploy (from a terminal)
 
 ### 1. Authenticate
 
