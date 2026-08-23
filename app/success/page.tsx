@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { stripe } from '@/lib/stripe';
 import { signEntitlements, isPaid } from '@/lib/entitlements';
 import { merchant } from '@/lib/catalog';
+import { configuredSiteUrl } from '@/lib/site';
 import { Icon } from '@/app/components/Icon';
 
 export const dynamic = 'force-dynamic';
@@ -54,7 +55,7 @@ export default async function SuccessPage({ searchParams }: Params) {
     );
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
+  const baseUrl = configuredSiteUrl();
   const entitlements = signEntitlements(session, baseUrl);
   const email = session.customer_details?.email;
 

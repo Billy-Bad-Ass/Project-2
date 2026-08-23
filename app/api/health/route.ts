@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { items } from '@/lib/catalog';
 import { productFileExists, storageBackend } from '@/lib/storage';
+import { configuredSiteUrl } from '@/lib/site';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -24,7 +25,7 @@ export async function GET() {
   const missing = expected.filter((_, index) => !present[index]);
 
   const config = {
-    siteUrl: Boolean(process.env.NEXT_PUBLIC_SITE_URL),
+    siteUrl: Boolean(configuredSiteUrl()),
     stripeKey: Boolean(process.env.STRIPE_SECRET_KEY),
     webhookSecret: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
     signingSecret: (process.env.DOWNLOAD_SIGNING_SECRET ?? '').length >= 32,

@@ -3,6 +3,7 @@ import type Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { signEntitlements, isPaid } from '@/lib/entitlements';
 import { sendDownloadEmail } from '@/lib/email';
+import { configuredSiteUrl } from '@/lib/site';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -81,7 +82,7 @@ async function handleCompletedSession(partial: Stripe.Checkout.Session) {
     return;
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
+  const baseUrl = configuredSiteUrl();
   const entitlements = signEntitlements(session, baseUrl);
   const email = session.customer_details?.email ?? session.customer_email;
 

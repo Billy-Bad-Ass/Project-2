@@ -56,10 +56,11 @@ jobs:
       - name: Check every PDF matches the page count its listing promises
         run: node scripts/check-pdfs.mjs
 
-      - name: Build the storefront
+      - name: Build the storefront with no site URL configured
+        # Deliberately unset: this is the state of a first deploy, and an empty
+        # NEXT_PUBLIC_SITE_URL once broke the build here. Do not "fix" this by
+        # supplying a value — that is what hid the bug.
         run: npm run build
-        env:
-          NEXT_PUBLIC_SITE_URL: https://example.invalid
 
       - name: Build the Cloudflare Worker
         # Catches Workers-only breakage that `next build` cannot see: a node:

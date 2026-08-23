@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { merchant } from '@/lib/catalog';
+import { metadataBaseUrl } from '@/lib/site';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(metadataBaseUrl()),
   title: {
     default: `${merchant.name} — ${merchant.tagline}`,
     template: `%s — ${merchant.name}`,
