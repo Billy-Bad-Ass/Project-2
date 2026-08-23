@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getItem, merchant } from '@/lib/catalog';
+import { getItem, isSellable, merchant } from '@/lib/catalog';
 import { stripe } from '@/lib/stripe';
 import { configuredSiteUrl } from '@/lib/site';
 
@@ -30,6 +30,16 @@ export async function POST(request: NextRequest) {
   const item = getItem(sku);
   if (!item) {
     return NextResponse.json({ error: `Unknown product: ${sku}` }, { status: 404 });
+  }
+
+  // The storefront hides these, but hiding a card is not a guard — the sku is
+  // public and this route is the only thing between it and a charge.
+  if (!isSellable(item)) {
+    console.warn(`[checkout] refused ${item.sku}: status is "${item.status}"`);
+    return NextResponse.json(
+      { error: 'This guide is not on sale yet. It is being finished.' },
+      { status: 409 },
+    );
   }
 
   const origin = request.headers.get('origin')?.trim() || configuredSiteUrl();

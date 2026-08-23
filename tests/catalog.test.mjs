@@ -89,6 +89,33 @@ test('every product carries the catalogue currency', () => {
   }
 });
 
+/**
+ * A documented content gap must block the sale, not just warn about it. The
+ * miniature guide's listing promises eight recipes its file does not contain.
+ */
+test('a product with a content gap is not sellable and not listed', () => {
+  const gapped = catalog.items.filter((item) => item.status !== 'ready');
+
+  for (const item of gapped) {
+    assert.equal(catalog.isSellable(item), false, `${item.sku} should not be sellable`);
+    assert.equal(
+      catalog.listed.some((listed) => listed.sku === item.sku),
+      false,
+      `${item.sku} should not appear in the shop`,
+    );
+  }
+});
+
+test('everything listed is sellable and has its files', () => {
+  assert.ok(catalog.listed.length > 0, 'the shop has nothing to sell');
+
+  for (const item of catalog.listed) {
+    assert.equal(item.status, 'ready');
+    assert.equal(item.contentGap, null, `${item.sku} is listed but has a content gap`);
+    assert.ok(item.files.length >= 2, `${item.sku} is missing a paper size`);
+  }
+});
+
 test('page counts are positive and match the parsed page list', () => {
   for (const item of catalog.singles) {
     assert.ok(item.pageCount > 0, `${item.sku} has no pages`);

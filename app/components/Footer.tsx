@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { merchant, singles } from '@/lib/catalog';
+import { merchant, listed } from '@/lib/catalog';
 
 export function Footer() {
   return (
@@ -16,7 +16,7 @@ export function Footer() {
           <div>
             <h4>Guides</h4>
             <ul>
-              {singles.map((item) => (
+              {listed.map((item) => (
                 <li key={item.sku}>
                   <Link href={`/products/${item.sku}`}>{item.name}</Link>
                 </li>
