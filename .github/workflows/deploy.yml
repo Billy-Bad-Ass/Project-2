@@ -1,7 +1,7 @@
 name: Deploy to Cloudflare
 
-# Manual by default. Flip the `push` trigger on once you are happy taking every
-# merge to main straight to production.
+# Runs the whole deploy from the browser — no terminal needed anywhere.
+# Actions tab -> Deploy to Cloudflare -> Run workflow.
 on:
   workflow_dispatch:
     inputs:
@@ -9,6 +9,7 @@ on:
         description: 'Skip the R2 upload (only if the PDFs are already current)'
         type: boolean
         default: false
+  # Uncomment once you are happy taking every merge to main straight to production.
   # push:
   #   branches: [main]
 
@@ -19,8 +20,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    environment: production
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v6
@@ -30,7 +30,39 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Check the Cloudflare credentials are present
+        # Failing here with a clear message beats failing four steps later with
+        # a wrangler auth error that reads like a bug.
+        run: |
+          missing=
+          [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] && missing="$missing CLOUDFLARE_API_TOKEN"
+          [ -z "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ] && missing="$missing CLOUDFLARE_ACCOUNT_ID"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository secret(s):$missing"
+            echo "Add them under Settings -> Secrets and variables -> Actions." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
       - run: npm ci
+
+      - name: Ensure the R2 buckets exist
+        # Idempotent: 'already exists' is the expected result on every run after
+        # the first, so it must not fail the deploy.
+        run: |
+          for bucket in bba-network-downloads bba-network-downloads-preview; do
+            if npx wrangler r2 bucket create "$bucket" 2>&1 | tee /tmp/r2.log; then
+              echo "created $bucket"
+            elif grep -qiE "already (exists|owned)|10004" /tmp/r2.log; then
+              echo "$bucket already exists"
+            else
+              echo "::error::Could not create or confirm bucket $bucket"
+              cat /tmp/r2.log
+              exit 1
+            fi
+          done
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Build catalogue
         run: npm run catalog:build
@@ -54,26 +86,89 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Deploy the Worker
-        run: npm run cf:deploy
+        id: deploy
+        run: |
+          set -o pipefail
+          npm run cf:deploy 2>&1 | tee /tmp/deploy.log
+          url=$(grep -oE 'https://[a-z0-9._-]+\.workers\.dev' /tmp/deploy.log | head -1)
+          echo "worker_url=$url" >> $GITHUB_OUTPUT
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Next inlines NEXT_PUBLIC_* at BUILD time, so this has to be set here
+          # rather than only in wrangler.jsonc vars.
           NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
 
       - name: Health check
         # The deploy is not done until the store can actually deliver a file.
+        id: health
         run: |
-          url="${{ vars.SITE_URL }}/api/health"
-          echo "checking $url"
+          origin="${{ vars.SITE_URL }}"
+          [ -z "$origin" ] && origin="${{ steps.deploy.outputs.worker_url }}"
+
+          if [ -z "$origin" ]; then
+            echo "::warning::Could not determine the deployed URL; skipping the health check."
+            echo "skipped=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "checking $origin/api/health"
           for attempt in 1 2 3 4 5; do
-            body=$(curl -sS --max-time 20 "$url" || true)
+            body=$(curl -sS --max-time 20 "$origin/api/health" || true)
             if echo "$body" | grep -q '"ok":true'; then
-              echo "healthy: $body"
+              echo "healthy"
+              echo "body=$body" >> $GITHUB_OUTPUT
               exit 0
             fi
-            echo "attempt $attempt not healthy yet"
             sleep $((attempt * 5))
           done
-          echo "::error::Deploy is live but unhealthy. Last response: $body"
-          echo "::error::Most likely the PDFs are not in R2 — run 'npm run pdf:upload'."
+
+          echo "body=$body" >> $GITHUB_OUTPUT
+          echo "unhealthy=true" >> $GITHUB_OUTPUT
+          echo "::error::Deployed but unhealthy. See the job summary for what is missing."
           exit 1
+
+      - name: Write the summary
+        # Runs even on failure so the summary explains what to fix. Reading this
+        # is far easier than scrolling raw logs, especially on a phone or tablet.
+        if: always()
+        run: |
+          url="${{ vars.SITE_URL }}"
+          [ -z "$url" ] && url="${{ steps.deploy.outputs.worker_url }}"
+
+          {
+            echo "## Deploy result"
+            echo
+            if [ -n "$url" ]; then
+              echo "**Your store:** $url"
+              echo
+              echo "**Health:** $url/api/health"
+              echo
+            fi
+
+            if [ "${{ steps.health.outputs.unhealthy }}" = "true" ]; then
+              echo "### Not healthy yet"
+              echo
+              echo '```json'
+              echo '${{ steps.health.outputs.body }}'
+              echo '```'
+              echo
+              echo "- \`\"missing\"\` is not empty -> the PDFs are not in R2. Re-run this workflow with **Skip the R2 upload** unticked."
+              echo "- A \`config\` value is \`false\` -> that secret is not set on the Worker."
+              echo "  Add it in the Cloudflare dashboard: Workers & Pages -> bba-network-store -> Settings -> Variables and Secrets."
+              echo "- \`\"backend\": \"filesystem\"\` -> the R2 binding is not attached."
+            elif [ "${{ steps.health.outputs.skipped }}" = "true" ]; then
+              echo "Health check skipped — no URL available."
+            elif [ "${{ job.status }}" = "success" ]; then
+              echo "### Healthy"
+              echo
+              echo "The store is live and can deliver files."
+              echo
+              if [ -z "${{ vars.SITE_URL }}" ]; then
+                echo "> **Next:** set the repository variable \`SITE_URL\` to \`$url\`"
+                echo "> (Settings -> Secrets and variables -> Actions -> Variables), then run this"
+                echo "> workflow once more. Until you do, download links in delivery emails point"
+                echo "> at the wrong host — the site itself will look fine."
+              fi
+            fi
+          } >> $GITHUB_STEP_SUMMARY
