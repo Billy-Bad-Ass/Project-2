@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" role="img" aria-label="BBA Network">
+  <title>BBA Network</title>
+  <rect x="2" y="8" width="48" height="48" rx="12" fill="#14110F"/>
+  <path d="M14 22h10.5a5.5 5.5 0 0 1 1.6 10.76A6 6 0 0 1 25 44H14V22Zm5 4v5h5a2.5 2.5 0 0 0 0-5h-5Zm0 9v5h5.5a2.5 2.5 0 0 0 0-5H19Z" fill="#FBF7F0"/>
+  <path d="M31 22h6v22h-6z" fill="#C2410C"/>
+  <text x="64" y="34" font-family="ui-sans-serif,system-ui,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5" fill="#14110F">BBA Network</text>
+  <text x="65" y="49" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.5" letter-spacing="2.4" fill="#6B6259">REFERENCE GUIDES</text>
+</svg>

@@ -1,0 +1,55 @@
+name: Agent · Revenue digest
+
+# Reads Stripe and reports what actually sold, leading with problems.
+on:
+  schedule:
+    - cron: "0 8 * * 1" # Mondays 08:00 UTC, after the market scan
+  workflow_dispatch:
+    inputs:
+      period:
+        description: 'Period to report on'
+        required: false
+        default: 'last 7 days'
+
+concurrency:
+  group: agent-revenue-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Produce the digest
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            /revenue-digest ${{ inputs.period || 'last 7 days' }}
+
+            Then open a GitHub issue titled "Revenue digest — <the period>" whose body
+            is the digest, and label it `revenue`.
+
+            If there were refunds, disputes, or any completed checkout session with no
+            matching delivery, put those at the top of the issue body and say so in the
+            title. Those are the reason this job exists.
+
+            If the period had no sales at all, open no issue — log one line and stop.
+          claude_args: |
+            --allowed-tools Read,Write,Bash,Grep,Glob,Agent
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}

@@ -1,0 +1,335 @@
+{
+  "generatedFrom": "content/products/*.md + catalog/products.json",
+  "merchant": {
+    "name": "BBA Network",
+    "tagline": "Printable reference guides that actually fix the problem.",
+    "supportEmail": "support@bba.network"
+  },
+  "currency": "gbp",
+  "items": [
+    {
+      "type": "single",
+      "sku": "espresso-dial-in-card",
+      "name": "Espresso Dial-In Troubleshooting Card",
+      "subtitle": "Sour? Bitter? Both? Fix it in one page.",
+      "blurb": "Sour, bitter, or both at once — the card tells you what that means and exactly what to change next.",
+      "listingTitle": "Espresso Dial In Cheat Sheet Printable Coffee Troubleshooting Guide Sour Bitter Fix Home Barista Card Kitchen Coffee Bar Print Digital Download",
+      "description": "Sour? Bitter? Both at once? Fix it in one page.\n\nA printable troubleshooting card for home espresso. Pin it by the machine and\nstop guessing which way to move the grinder.\n\nThe card tells you what a shot tastes like, what that actually means, and what\nto change — one variable at a time, so every shot teaches you something.\n\nWHAT YOU GET\n• 6-page PDF, instant download\n• Both A4 and US Letter (two files, same content)\n• THE CARD — a single page designed to be printed and pinned up\n• The taste-to-fix table: sour, bitter, both, watery, ashy\n• A full decision tree including choking and gushing shots\n• Puck prep: WDT, levelling and tamping, and why level beats hard\n• Temperature by roast level\n• A dial-in log sheet, so you can find your way back to a shot that worked\n\nTHE ONE THING MOST GUIDES GET WRONG\nSour AND bitter at the same time is not \"in between\". It is channelling — and\ngrinding finer to chase the sourness makes it worse. This card sends you to\npuck prep instead, and explains why.\n\nWHO IT IS FOR\nAnyone with a home machine and a grinder they can adjust. Beginners who want a\nstarting point that works, and anyone who has been fiddling for weeks without\nthe shot converging.\n\nHONEST ABOUT WHAT IS YOURS\nGrinder click counts are meaningless between machines, and this card says so\nrather than pretending otherwise. It teaches you the method and gives you a log\nsheet to find your own numbers.\n\nDIGITAL DOWNLOAD\nNo physical item is shipped. Files are available immediately after purchase.\nFor personal use — print as many copies as you like for yourself.",
+      "tags": [
+        "espresso guide",
+        "coffee cheat sheet",
+        "espresso dial in",
+        "home barista",
+        "barista gift",
+        "coffee bar decor",
+        "coffee lover gift",
+        "printable pdf",
+        "digital download",
+        "kitchen printable",
+        "coffee poster",
+        "espresso print",
+        "barista training"
+      ],
+      "priceMinor": 500,
+      "currency": "gbp",
+      "pageCount": 6,
+      "pages": [
+        {
+          "number": 1,
+          "heading": "Cover",
+          "markdown": "**ESPRESSO DIAL-IN CARD**  \n  \n**Sour? Bitter? Both?** **Fix it in one page.**  \n  \nA troubleshooting card for home espresso. Print it. Pin it by the machine. Stop guessing.  \n*Page 2 is the card. The rest is why it works.*"
+        },
+        {
+          "number": 2,
+          "heading": "THE CARD",
+          "markdown": "**START HERE, EVERY TIME**  \n  \n```\nDOSE     18 g in           ← lock this. Do not move it.\nYIELD    36 g out          ← 1:2 ratio\nTIME     25–32 s           ← from the moment the pump starts\nTEMP     ~93°C / 200°F     ← if your machine lets you set it\n\n```\n  \n**THE ORDER — THIS IS THE WHOLE CARD**  \n  \n**1. Lock the dose.**  \n  \n**2. Move the grind until the TIME is right.**  \n  \n**3. Only then judge the taste.**  \n  \n**Change one thing at a time.** Move grind and dose together and the result tells you nothing — you have spent the coffee and learned nothing from it.  \n**WHAT IT TASTES LIKE → WHAT TO DO**  \n  \n\n| It tastes | That means | Do this |\n| --- | --- | --- |\n| SOUR — sharp, thin, empty, disappears fast | Under-extracted. Water went through too quickly | GRIND FINER. One step. Pull again |\n| BITTER — harsh, dry, lingers unpleasantly | Over-extracted. Water went through too slowly, or too hot, or the machine is dirty | GRIND COARSER. One step. Pull again |\n| SOUR AND BITTER TOGETHER | ⚠ CHANNELLING. This is not a grind problem | ⚠ DO NOT TOUCH THE GRINDER. Fix your puck prep — see below |\n| WATERY, PALE, NO BODY | Ratio too wide, or the dose is too low | Cut the yield back toward 1:2, or check you are actually dosing what you think |\n| HARSH AND ASHY even at the right time | Too hot, or an unclean machine | Drop the temperature. Then clean the group head and the basket |\n  \n**⚠ THE ONE PEOPLE GET WRONG**  \n  \n**Sour and bitter at the same time is not \"somewhere in the middle\". It is channelling.**  \nWater found a low-resistance path through the puck. Part of the coffee over-extracted while the rest barely brewed, and you are tasting both at once.  \n**Grinding finer to chase the sourness makes it worse.** It raises the pressure against a puck that already has a hole in it.  \n**Fix the puck, not the grind:**  \n1. **WDT** — stir the grounds with fine needles. Break every clump.  \n2. **Level the bed** before you tamp.  \n3. **Tamp LEVEL.** Level matters far more than hard.  \n4. Only if it still channels: one step finer, to raise puck density.  \n**ONE STEP. RE-PULL. ONE STEP. RE-PULL.**  \n  \nTwo changes at once and you have no information."
+        },
+        {
+          "number": 3,
+          "heading": "The order, and why it is the order",
+          "markdown": "**The order again, with the reasoning**  \n  \n**1. Lock the dose.**  \nYour dose is a property of your basket, not of the coffee. An 18 g basket wants roughly 18 g. Once you have found what your basket takes, it stops being a variable and becomes a constant. Writing it down and never touching it again removes an entire dimension from the problem.  \n**Why this comes first:** dose changes puck depth, which changes resistance, which changes shot time — so it moves the same needle grind does. If both are moving, you cannot attribute a change to either.  \n**2. Move the grind until the time is right.**  \nGrind is your resistance dial and it is the only one you should be turning during a dial-in. Finer means slower, coarser means faster. Adjust until an 18 g dose gives you 36 g in 25–32 seconds.  \n**Why time before taste:** a shot pulled far outside the time window tastes bad for structural reasons that have nothing to do with the coffee. Tasting a 14-second shot to decide whether you like the beans is a wasted cup. Get the shot into the window first, then the taste becomes information.  \n**3. Only then judge the taste, and adjust the yield.**  \nNow the taste is telling you about extraction rather than about a broken shot. Widen the ratio toward 1:2.5 for a lighter, sweeter, more delicate cup; tighten toward 1:1.5 for something heavier and more intense.  \n**Why beginners are told the opposite, and why they are not wrong**  \n  \nMost beginner guidance says \"taste it, then move the grinder\". That is not bad advice — it assumes your dose is already fixed, which for someone using one basket and a set scoop it usually is.  \n**This card uses the professional ordering because at the start your dose is usually *not* fixed**, and that is exactly why beginners' dial-ins wander for weeks without converging. Once your dose is genuinely locked, the two approaches are the same thing.  \n**The ratio, plainly**  \n  \n**1:2 is the starting point.** 18 g in, 36 g out. Modern specialty practice runs roughly **1:2 to 1:2.5**.  \nStart at 1:2 and only widen once the shot is clean. A wide ratio on a channelling shot just gives you more of a bad thing.  \n**One variable. Then re-pull.**  \n  \nThis is the single rule that separates a dial-in that converges in four shots from one that never converges at all. It feels slow. It is not — it is the fast way, because every shot produces usable information."
+        },
+        {
+          "number": 4,
+          "heading": "The decision tree",
+          "markdown": "```\nPULL A SHOT. WEIGH IT. TIME IT. TASTE IT.\n│\n├─ SOUR AND BITTER TOGETHER?\n│    └─ ⚠ CHANNELLING — do not touch the grinder\n│         1. WDT — stir with fine needles, break every clump\n│         2. Level the bed\n│         3. Tamp level, not hard\n│         4. Still channelling? ONE step finer\n│       → Re-pull before you change anything else\n│\n├─ ONLY SOUR?\n│    ├─ Time under ~25 s?  → GRIND FINER, one step\n│    ├─ Time in range?     → Raise the temperature slightly\n│    └─ Still sour?        → Extend the yield toward 1:2.5\n│\n├─ ONLY BITTER?\n│    ├─ Time over ~32 s?   → GRIND COARSER, one step\n│    ├─ Time in range?     → Lower the temperature slightly\n│    └─ Still bitter?      → CLEAN the group head and basket, re-pull\n│\n├─ WATERY / THIN, but balanced?\n│    └─ Cut the yield toward 1:2\n│       or raise the dose within what the basket takes\n│\n├─ CHOKING — barely any flow?\n│    └─ Far too fine. Go SEVERAL steps coarser, not one\n│\n├─ GUSHING — done in under 15 s?\n│    └─ Far too coarse, OR the puck cracked\n│       Check prep first, then go several steps finer\n│\n└─ TASTES GOOD?\n     └─ WRITE IT DOWN. Page 6. You will not remember it.\n\n```\n  \n**Reading the tree**  \n  \n**\"One step\" means one step on your grinder** — whatever the smallest meaningful adjustment on your equipment is. On a stepped grinder that is one click. On a stepless one it is a small, repeatable nudge you can find again.  \n**\"Several steps\" is for the two broken cases only** — choking and gushing. Everywhere else, one step."
+        },
+        {
+          "number": 5,
+          "heading": "Puck prep, and temperature",
+          "markdown": "**Puck prep — the part that fixes most problems**  \n  \nMost dial-in problems that survive three grind adjustments are not grind problems. They are prep problems.  \n**1. WDT — stir the grounds with fine needles.**  \nBreaks up the clumps that come off any grinder and evens out the density across the basket. **This is the single highest-value habit on this card.** It costs ten seconds and it is the difference between a puck that extracts evenly and one that has a channel waiting in it.  \n**2. Level the bed before you tamp.**  \nA tilted or uneven bed becomes a tilted puck, and water goes through the shallow side.  \n**3. Tamp level, not hard.**  \n**Levelness matters far more than force.** Chasing tamp pressure is wasted effort — past the point where the puck is compacted, more force achieves nothing. A tilted tamp, however, guarantees a channel.  \n**The three causes of channelling**  \n  \nClumps, a tilted tamp, and uneven distribution. **All three are prep. None of them are grind.** That is the whole reason the sour-and-bitter case sends you here instead of to the grinder.  \n**Temperature**  \n  \n* Typical brew range is roughly **90–96°C / 195–205°F**.  \n* **~93°C / 200°F is the default start.**  \n* **Lighter roast → go hotter.** Light roasts are denser and harder to extract.  \n* **Darker roast → go cooler.** Dark roasts give up their solubles easily and turn bitter and ashy when pushed.  \n**If your machine has no temperature control, ignore this section entirely.** That is most consumer machines, and it is not a problem — grind and ratio are the two dials that matter most, and you have both.  \n**Fresh beans move under you**  \n  \nA bean's dial-in **drifts over the days after roast**. Coffee that is very fresh degasses and behaves differently from the same bag a fortnight later.  \n**If a setting that worked last week is sour today, the coffee changed, not your technique.** Adjust and move on. This is normal and it is not a fault in your process.  \n**One workaround, flagged as exactly what it is**  \n  \nIf a shot is technically dialled in and *still* tastes slightly sour, a trace of sodium bicarbonate in the cup will neutralise residual acidity.  \n**This is a correction at the cup, not a fix to the shot.** It changes what you are drinking, not what your machine did. Use it knowing that, and do not use it to paper over a shot you have not actually dialled in."
+        },
+        {
+          "number": 6,
+          "heading": "Log sheet, and what is general vs yours",
+          "markdown": "**General — applies on any machine, anywhere**  \n  \n* The 1:2 ratio and the 25–32 second window as a starting point  \n* The sour/bitter/both logic  \n* The adjustment order: dose, then grind to time, then yield  \n* Everything on the puck prep page  \n* Temperature direction by roast level  \n* Fresh beans drifting  \n**Specific to your machine — never copy these from anyone**  \n  \n* **Grinder settings and click counts.** Completely meaningless between grinders. Someone else's \"12 clicks\" tells you absolutely nothing about your grinder, even the same model, even the same bag of coffee.  \n* **Pressure profiling.** Needs a machine that can do it. Most cannot.  \n* **\"9 bar.\"** Fixed and not user-adjustable on most consumer machines. It is not a dial you have, and reading about it will not help you.  \n* **Your dose range.** A property of your basket. Find it once, write it down.  \n**The rule: if a number came from someone else's machine, it is a starting point at best and noise at worst.**  \n**DIAL-IN LOG**  \n  \n*Print several. One row per shot. This is how a dial-in converges.*  \n```\nBEAN: ________________________  ROASTED: __________\n\n┌──────┬───────┬──────┬───────┬──────┬──────────────────────┐\n│ Date │ Grind │ Dose │ Yield │ Time │ Taste / what I did   │\n├──────┼───────┼──────┼───────┼──────┼──────────────────────┤\n│      │       │      │       │      │                      │\n├──────┼───────┼──────┼───────┼──────┼──────────────────────┤\n│      │       │      │       │      │                      │\n├──────┼───────┼──────┼───────┼──────┼──────────────────────┤\n│      │       │      │       │      │                      │\n├──────┼───────┼──────┼───────┼──────┼──────────────────────┤\n│      │       │      │       │      │                      │\n├──────┼───────┼──────┼───────┼──────┼──────────────────────┤\n│      │       │      │       │      │                      │\n└──────┴───────┴──────┴───────┴──────┴──────────────────────┘\n\nTHE ONE THAT WORKED:\nGrind ______  Dose ______  Yield ______  Time ______  Temp ______\n\n```\n  \n*Repeat the table block to fill the page.*  \n**Footer line:**  \nPersonal use. Print as many copies as you like for yourself. Please don't resell or redistribute the file."
+        }
+      ],
+      "badge": "Most popular",
+      "accent": "#7C3E12",
+      "icon": "mug-hot",
+      "order": 1,
+      "status": "ready",
+      "contentGap": null,
+      "landscapePages": [],
+      "sourceNote": "espresso-dial-in-card.md",
+      "files": [
+        {
+          "name": "espresso-dial-in-card-A4.pdf",
+          "size": "A4",
+          "label": "A4"
+        },
+        {
+          "name": "espresso-dial-in-card-Letter.pdf",
+          "size": "Letter",
+          "label": "US Letter"
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "sku": "keyboard-sound-mod-chart",
+      "name": "Keyboard Sound & Mod Chart",
+      "subtitle": "What actually changes the sound, how much, and what it costs you to undo.",
+      "blurb": "Every common mod rated for effect, reliability, reversibility and cost — including the ones that will do nothing on your board.",
+      "listingTitle": "Mechanical Keyboard Mod Chart Printable Sound Guide PDF Tape Mod Foam Lube Reference Custom Keyboard Cheat Sheet Desk Setup Print Digital Download",
+      "description": "Every common keyboard mod, rated for what it actually does — and what it costs\nyou to undo.\n\nA printable reference chart for anyone modding a mechanical keyboard. Twenty\nmods, each rated for effect, how reliably it works, whether you can reverse it,\nand what it risks.\n\nWHAT YOU GET\n• 6-page PDF, instant download\n• Both A4 and US Letter (two files, same content)\n• THE CHART — every common mod in one table\n• Which mods work on any board, and which depend entirely on yours\n• The order to do them in, and why stabilisers come first\n• The tape mod safety question, with both positions and where it lands\n• \"I want it to sound like ___\" — reverse lookup for thock, quiet, poppy,\n  clacky, and fixing hollow or pingy boards\n• Glossary and a build checklist\n\nTHE HONEST PART\nMost mod guides tell you what to do and not what will do nothing. This one\ntells you when a mod will not work on your board and why — a tape mod on an\nalready-dampened gasket board is the big one — so you stop chasing a change\nthat was never available.\n\nIt also says plainly which things you cannot mod your way to. Plate, mount and\nkeycap material are purchases, not mods, and no amount of tape changes that.\n\nWHO IT IS FOR\nFirst-time builders who want to do things in the right order, and anyone with\na board that sounds wrong and does not know which of six mods to try.\n\nDIGITAL DOWNLOAD\nNo physical item is shipped. Files are available immediately after purchase.\nFor personal use — print as many copies as you like for yourself.",
+      "tags": [
+        "mechanical keyboard",
+        "keyboard mod guide",
+        "keyboard cheat sheet",
+        "custom keyboard",
+        "tape mod",
+        "keyboard sound",
+        "switch lube",
+        "keeb",
+        "printable pdf",
+        "digital download",
+        "keyboard poster",
+        "desk setup",
+        "thock"
+      ],
+      "priceMinor": 600,
+      "currency": "gbp",
+      "pageCount": 6,
+      "pages": [
+        {
+          "number": 1,
+          "heading": "Cover",
+          "markdown": "**KEYBOARD SOUND & MOD CHART**  \n  \n**What actually changes the sound.** **How much. And what it costs you to undo.**  \n  \nEvery common mod, rated for effect, reliability and reversibility. Plus the honest answer about which ones do nothing on your board."
+        },
+        {
+          "number": 2,
+          "heading": "THE CHART",
+          "markdown": "**⚠ Read this before the table**  \n  \n**Sound is the product of switch, plate and mounting architecture *interacting*. There is no single variable that \"makes it thocky\", and any guide promising one is overselling.**  \nThe same mod on two different boards gives different results. That is expected behaviour, not a fault in the mod or in you.  \n**The chart**  \n  \n\n| Mod | What it does to the sound | How reliable | Reversible? | Cost | Risk |\n| --- | --- | --- | --- | --- | --- |\n| Stabiliser tuning | Kills rattle and the tick on the downstroke | ✅ Always works | Yes | ~£0 | None |\n| Holee mod | Removes the wire tick stab tuning misses | ✅ Reliable | Yes | ~£0 | None — just fiddly |\n| Case foam | Cuts cavity resonance and hollowness | ✅ Generally true | Yes if non-adhesive | Low | Adhesive-backed leaves residue |\n| Plate foam | Softens, reduces high-frequency overtones | ✅ Generally true | Yes | Low | None |\n| PCB foam | Deeper, more uniform across the board | ✅ Generally true | Yes | Low | None |\n| PE foam | Deeper and noticeably \"poppier\"/marbly | ⚠️ Divisive — some love it, some hate the pop | Yes | Low | None |\n| Tape mod | Deeper, more pronounced, filters highs | ⚠️ Board-dependent — see page 3 | Yes, peels off | ~£0 | ⚠️ Disputed — see page 4 |\n| Switch lube (205g0) | Removes scratch and friction noise. Smoother | ✅ Generally true | ❌ Effectively no | Time | ⚠️ Over-lubing is the expensive mistake |\n| Switch films | Tightens housing wobble, slightly deepens | Modest — smaller effect than people expect | Yes | Low | None |\n| Aluminium plate | Brighter, higher-pitched, clackier | ✅ Generally true | Purchase only | £££ | None |\n| Brass plate | Brighter still, heavier, more ring | ✅ Generally true | Purchase only | £££ | None |\n| POM plate | Lower-pitched, softer, moderate volume | ✅ Generally true | Purchase only | £££ | None |\n| PC plate | Softest, flexible, absorbs through flex | ✅ Generally true | Purchase only | £££ | None |\n  \n**The one-line summary**  \n  \n**Cheap and reliable: stabilisers, foam, keycaps.** **Expensive and reliable: plate and mount — decide these before you buy.** **Cheap and unpredictable: tape mod.** **Free-ish and irreversible: lube.**"
+        },
+        {
+          "number": 3,
+          "heading": "What is reliable, and what depends on your board",
+          "markdown": "Most disappointment in this hobby comes from someone applying a mod that worked spectacularly in a video to a board where it had nothing to do.  \n**Generally true, regardless of board**  \n  \n* **Foam reduces resonance.** Always. More foam, less ring.  \n* **Denser and stiffer plates sound brighter.** Aluminium and brass up, polycarbonate and POM down.  \n* **Flexible plates sound softer**, because they absorb through flex.  \n* **Lubing removes friction noise.** It cannot fail to.  \n* **Unlubed stabilisers rattle.** Universally.  \nIf a mod is in this list and it did nothing for you, you probably did it wrong or the board already had it.  \n**Highly dependent on your specific board**  \n  \n* **How much a tape mod does.** Ranges from transformative to inaudible.  \n* **Whether the board can sound \"thocky\" at all.** Some cannot, at any price.  \n* **Whether adding foam helps or kills it.** A board that already ships well-dampened gets deadened rather than improved.  \n* **Desk surface effects.** Depends on case weight, feet and how much sound exits downward.  \n* **How much switch films matter.** Depends entirely on how loose the housings already were.  \n**The most useful specific case**  \n  \n**A tape mod does far less on an already-dampened gasket-mount board than on a tray-mount board where the PCB screws straight to the case.**  \nThe tape works by adding a reflective layer under the PCB and damping case cavity resonance. A gasket board with foam has already dealt with most of that. There is simply less left to fix.  \n**If you tape a gasket board and hear almost nothing, the mod worked exactly as it should have.** Do not add three more layers chasing a change that was never available. That is how people end up with four layers of masking tape inside a £300 keyboard for no acoustic reason at all.  \n**The general principle behind all of it**  \n  \nEvery mod on the chart does one of three things:  \n1. **Removes an unwanted noise** — rattle, tick, scratch. *(Stabs, Holee, lube.)* These always work, because the noise was definitely there.  \n2. **Removes resonance from an empty cavity.** *(Foam, tape.)* These work in proportion to how much empty cavity you had.  \n3. **Changes the fundamental pitch of the impact.** *(Plate, mount, keycaps.)* These always work, and they are the ones you have to buy.  \n**Category 2 is where all the disappointment lives.** If your board had no cavity resonance, nothing in category 2 will do anything, and no amount of tape will change that."
+        },
+        {
+          "number": 4,
+          "heading": "The order, and the expensive mistakes",
+          "markdown": "**Do it in this order**  \n  \n**1. Stabilisers first. Always first.**  \nRattle is the loudest and ugliest noise on most boards, and fixing it changes more than any acoustic mod on the chart. It is free, reversible and fast. Everything else is cosmetic by comparison.  \nDoing this last is the most common sequencing mistake — people lube 90 switches, reassemble, and then discover the spacebar still rattles.  \n**2. Foam second.**  \nThe biggest reliable change per unit of effort and risk. Start with case foam. Add plate foam if it is still too bright. Add PCB or PE foam only if you want to go further and you know PE is divisive.  \n**3. Lube third.**  \nThe biggest single *improvement* in feel and sound, and by far the slowest step. **Budget 3–5 hours for a first full build including lubing.** It is also the one thing on this chart you cannot undo.  \n**4. Tape mod last, and only as an experiment.**  \nReversible, informative, unpredictable. Do it to find out whether you like the direction, not as a permanent solution. See the box below.  \n**5. Plate and mount are purchases, not mods.** Decide them before you buy the board. There is no modding your way from tray to gasket.  \n**⚠ TAPE MOD — SOURCES GENUINELY DISAGREE**  \n  \n**The optimistic position:** it is non-permanent, peels off easily, and at worst leaves residue that isopropyl alcohol removes. This is what most enthusiast guides say.  \n**The cautious position:** adhesive can degrade over time, leave residue, and in the worst case contribute to corrosion or failure on a PCB it sits directly against. Foam is non-conductive and fully reversible, so why not use foam.  \n**Where this actually lands: it is a question of timeframe, not a verdict.**  \n* **Short-term testing is low risk.** Days or weeks. Almost nobody disputes this.  \n* **Leaving tape on a PCB for years is the genuinely untested case.** Adhesives do age, and the long-term data does not really exist.  \nWorth knowing: **some of the loudest warnings come from sources that sell foam.** Discount the alarm slightly. But the underlying mechanism — adhesives age, and direct PCB contact matters — is real.  \n**The practical rule: tape mod to find out whether you like the direction. If you do, get there with foam and keep that instead.**  \n**The expensive mistake: over-lubing**  \n  \nA pack of switches runs roughly **£40–90**, and too much lubricant on tactile switches **mutes the tactility you paid for.**  \nIt cannot be undone without disassembling and cleaning every single switch — which is hours of work to reverse hours of work.  \n**Do this instead:**  \n1. Lube **one** switch.  \n2. Put it in the board.  \n3. **Type on it.** Not press it once — type on it.  \n4. Only then do the other eighty-nine.  \n**Thin coats.** You want to eliminate friction, not fill the housing. If you can see lubricant pooled anywhere, it is too much.  \n**Do not lube tactile legs at all** unless you specifically want to soften the bump — which is usually the opposite of why you bought tactiles.  \n**The other expensive mistake: buying the fix twice**  \n  \nDeciding you want a deeper sound and buying foam, tape, new keycaps and films in one order. You then have no idea which one did what, and if the result is wrong you cannot work backwards.  \n**One change. Type on it for a day. Then the next.** Same principle as everything else on this chart."
+        },
+        {
+          "number": 5,
+          "heading": "\"I want it to sound like ___\"",
+          "markdown": "Reverse lookup. Find the sound you want, do the things in order, stop when you like it.  \n**\"Deep and thocky, not clacky\"**  \n  \n1. Tune the stabilisers  \n2. Case foam, then plate foam  \n3. **PBT keycaps** — and thicker ones if you have the option  \n4. Softer plate if you are buying: **POM or PC**  \n5. Lube the switches  \n6. Try the tape mod last  \n⚠ **Honest limit:** if your board is a lightweight plastic tray-mount with an aluminium plate, you can improve it substantially but you will not get it all the way there. Some of \"thock\" is bought, not modded.  \n**\"Quieter — I share a room / I'm on calls\"**  \n  \n1. **Silent switches.** This is the answer and nothing else comes close  \n2. Case foam and plate foam  \n3. **Thicker PBT keycaps**  \n4. Tune the stabilisers — rattle is what carries through a wall  \n5. A thick deskmat  \n⚠ **Honest limit:** a normal mechanical keyboard with foam is still a mechanical keyboard. If it genuinely has to be quiet, the switch choice is the decision and everything else is a rounding error.  \n**\"Poppy and marbly\"**  \n  \n1. **PE foam** — this is the mod that produces this specific sound  \n2. Keep the plate on the stiffer side  \n3. Lube for smoothness, not for damping  \n⚠ **This sound is divisive.** Some people find the pop artificial and irritating. It is also the easiest thing on this page to reverse, so try it.  \n**\"Clacky and crisp — I like it loud\"**  \n  \n1. **Aluminium or brass plate**  \n2. **ABS keycaps**, thinner rather than thicker  \n3. **Little or no foam** — you are removing damping, not adding it  \n4. Still tune the stabilisers. Rattle is not clack, it is just noise  \n**Note:** this is the one profile where doing *less* is the answer, and most guides will only tell you how to add damping.  \n**\"It just sounds hollow and cheap\"**  \n  \n1. **Case foam.** This is the fix. Hollow means empty cavity  \n2. If it is still hollow: PCB foam, or a tape mod to test  \n3. Then stabilisers, which are probably also rattling  \nHollowness is the most fixable complaint on this page. Foam solves it almost every time.  \n**\"There's a ping / ring after each keypress\"**  \n  \n1. **Spring ping** — lube the springs, or swap them  \n2. **Case ring** — case foam  \n3. **Plate ring** — usually brass or aluminium. Plate foam helps, a plate swap fixes it  \nIdentify which one it is first: press a key with the board apart if you can. The three have different fixes and guessing wastes a build."
+        },
+        {
+          "number": 6,
+          "heading": "Glossary and build checklist",
+          "markdown": "**Glossary**  \n  \n**Thock** — deep, low-pitched, muted keypress sound. The most-chased and least-defined term in the hobby.  \n**Clack** — higher-pitched, brighter, sharper. Not a fault; some people want it.  \n**Ping** — a metallic ringing that continues after the keypress. Usually spring, sometimes plate or case.  \n**Rattle** — loose noise from a stabiliser, most obvious on the spacebar, shift and enter. Not a sound profile, just a defect.  \n**Tape mod** — layers of tape applied to the *back* of the PCB.  \n**Holee mod** — thin PTFE tape or fabric (**0.1–0.2 mm**) inside the stabiliser stem housing, closing the gap that ticks on the downstroke. Silk or satin glides better than cotton. Fiddly, free, reversible, and it fixes a noise nothing else will.  \n**PE foam** — thin polyethylene sheet between plate and PCB. Produces the distinctive \"poppy\" sound.  \n**Gasket mount** — plate suspended on gaskets between case halves rather than screwed to the case.  \n**Tray mount** — PCB or plate screwed directly to posts in the case.  \n**205g0 (Krytox)** — the standard thick lubricant for linear switch housings and stems.  \n**Films** — thin shims between switch housing halves to reduce wobble.  \n**WDT** — nothing to do with keyboards. If you found this here you have the espresso card.  \n**Build checklist**  \n  \n```\nBEFORE YOU START\n□ Do you actually know which noise you dislike?\n   (hollow / rattle / ping / scratch / too bright)\n□ Have you tuned the stabilisers yet? If not, do that first\n□ Have you lubed ONE switch and typed on it?\n\nORDER OF OPERATIONS\n□ 1. Stabilisers tuned, no rattle on space/shift/enter\n□ 2. Holee mod if the tick is still there\n□ 3. Case foam\n□ 4. Plate foam (if still too bright)\n□ 5. PCB or PE foam (optional, PE is divisive)\n□ 6. Switches lubed — thin, tested on one first\n□ 7. Films (optional, modest effect)\n□ 8. Tape mod — as an EXPERIMENT only\n\nBEFORE YOU BUY ANYTHING\n□ Plate material chosen?     ______________________\n□ Mount style chosen?        ______________________\n□ Keycap material chosen?    ______________________\n   (these three cannot be modded, only bought)\n\nAFTER EACH CHANGE\n□ Type on it for a day before changing anything else\n\n```\n  \n**Footer line:**  \nPersonal use. Print as many copies as you like for yourself. Please don't resell or redistribute the file."
+        }
+      ],
+      "badge": null,
+      "accent": "#1F4E5F",
+      "icon": "keyboard",
+      "order": 2,
+      "status": "ready",
+      "contentGap": null,
+      "landscapePages": [
+        2
+      ],
+      "sourceNote": "keyboard-sound-mod-chart.md",
+      "files": [
+        {
+          "name": "keyboard-sound-mod-chart-A4.pdf",
+          "size": "A4",
+          "label": "A4"
+        },
+        {
+          "name": "keyboard-sound-mod-chart-Letter.pdf",
+          "size": "Letter",
+          "label": "US Letter"
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "sku": "miniature-speedpaint-recipe-sheet",
+      "name": "Miniature Speed-Paint Recipe Sheet",
+      "subtitle": "Eight army recipes and the method behind them.",
+      "blurb": "Eight army recipes and the slapchop method behind them. Whole units, tabletop standard, no airbrush.",
+      "listingTitle": "Miniature Painting Recipe Sheet Printable PDF Speed Paint Guide Slapchop Cheat Sheet 8 Army Colour Schemes Wargaming Hobby Digital Download",
+      "description": "Eight complete army colour recipes, plus the method that makes them fast.\n\nPaint a whole unit to tabletop standard without an airbrush. This is the\nslapchop method — black primer, two drybrush passes, one coat of contrast\npaint — written out step by step, with eight worked recipes you can follow\nstraight off the page.\n\nWHAT YOU GET\n• 8-page PDF, instant download\n• Both A4 and US Letter (two files, same content)\n• 8 full army recipes: grim green armour, crimson warrior, bone and rot,\n  deep blue knight, rust and scrap, pale and ethereal, black armour,\n  desert skirmisher\n• Every recipe broken down by part — armour, cloth, metal, leather, skin,\n  weapon, highlight and base\n• A troubleshooting page: the five ways this goes wrong and how to fix each\n• A blank recipe sheet to photocopy and fill in for your own armies\n\nWHO IT IS FOR\nAnyone with more unpainted models than evenings. Beginners who want a method\nthat works the first time, and experienced painters who want their units to\nmatch without keeping notes in their head.\n\nWHAT IT IS NOT\nThis is not a display-painting guide. There are no blends, glazes or\nobject-source lighting here. It is a method for getting an army finished to a\ngood tabletop standard, quickly.\n\nA NOTE ON PAINTS\nRecipes are written by colour and role — \"dark green contrast\", \"bone\ncontrast\" — so they work with Citadel Contrast, Army Painter Speedpaint or\nVallejo Xpress. Use whichever range you already own.\n\nDIGITAL DOWNLOAD\nNo physical item is shipped. Files are available immediately after purchase.\nFor personal use — print as many copies as you like for yourself.",
+      "tags": [
+        "miniature painting",
+        "speed paint guide",
+        "slapchop",
+        "wargaming",
+        "painting cheat sheet",
+        "army painting",
+        "tabletop gaming",
+        "printable pdf",
+        "digital download",
+        "contrast paint",
+        "hobby guide",
+        "miniature painter",
+        "paint recipe"
+      ],
+      "priceMinor": 700,
+      "currency": "gbp",
+      "pageCount": 8,
+      "pages": [
+        {
+          "number": 1,
+          "heading": "Cover",
+          "markdown": "**SPEED-PAINT RECIPE SHEET**  \n  \n**Eight army recipes and the method behind them.**  \nTabletop standard. Whole units. No airbrush.  \n  \n*Prime black → drybrush grey → drybrush white → one coat of colour → base.*  \n*Eight worked recipes. One blank sheet for your own.*"
+        },
+        {
+          "number": 2,
+          "heading": "The method",
+          "markdown": "## The whole thing in one line  \n  \n**Prime black → heavy grey drybrush → light white drybrush → one coat of contrast paint → spot highlight → base.**  \nThis is slapchop. The two drybrush passes build a light map by hand, so the translucent paint that follows lands with shading already underneath it. That is the entire trick, and it is why this needs no airbrush.  \n## The six steps  \n  \n\n  \n**Where the time goes: step 4.** Everything else exists to make step 4 do two jobs at once — colour and shading in a single pass. That is the saving.  \n## The three rules  \n  \n1. **One coat of contrast paint. Never two.** A second coat floods the recesses and kills the gradient the first coat made. If the colour looks thin, you wanted a different colour, not more of this one.  \n2. **Do not thin contrast paints like normal paint.** They are formulated to flow. Thinning them makes them a wash, and a wash is a different product.  \n3. **Be mean with the white.** More white does not mean more contrast. It means a chalky model with no dark left in it.  \n## What this method will not do  \n  \nIt will not produce blends, glazes, or object-source lighting. It is not supposed to. Use it on the other forty models so you have the evenings free for the one you actually want to fuss over."
+        },
+        {
+          "number": 3,
+          "heading": "What you need",
+          "markdown": "## Paint  \n  \nYou need **one range of one-coat paints** and two drybrush colours. That is it.  \n\n  \n**Do not buy the full range.** Six to eight colours cover the eight recipes in this sheet. Buy the ones your recipe needs.  \n## Brushes  \n  \n\n  \n**If you are reaching for a size 000 during steps 1–4, you have left the method.**  \n## What not to buy yet  \n  \nAn airbrush, a wet palette, a lightbox, twelve brushes, or the full contrast range. None of them make step 4 faster, and step 4 is where all your time goes."
+        },
+        {
+          "number": 4,
+          "heading": "Recipes 1–4",
+          "markdown": "Every recipe assumes the same start: **black primer, mid-grey drybrush over everything, white drybrush on edges only.** Only the colour coat changes.  \n  \n## 1 — GRIM GREEN ARMOUR  \n  \n*Heavy infantry. The default \"serious soldier\" scheme.*  \n\n  \n**The trick on this one:** leave the lenses until absolutely last and paint them opaque. Two dots of bright colour on an otherwise dark model do more work than any amount of edge highlighting.  \n  \n## 2 — CRIMSON WARRIOR  \n  \n*High-contrast red. Reads across a table better than almost anything.*  \n\n  \n**Warning specific to red:** red contrast paints go blotchy if you go back over a half-dry patch. Load the brush, work one panel, move on, do not revisit. If it dries blotchy, a second thin coat *over the whole panel* is the fix — the one time this sheet allows a second coat.  \n  \n## 3 — BONE AND ROT  \n  \n*Undead, skeletons, anything decayed. The easiest scheme in this sheet.*  \n\n  \n**Why this one is easy:** bone contrast over a grey-and-white drybrush does almost all the work by itself. This is the recipe to test the method with if you have never slapchopped before.  \n  \n## 4 — DEEP BLUE KNIGHT  \n  \n*Ceremonial, clean, heraldic. Slower than the others and worth it.*  \n\n  \n**This is the one that rewards step 5.** Blue and gold both go flat under a translucent coat. Ten minutes of edge highlighting turns this from acceptable to the best-looking recipe on the sheet."
+        },
+        {
+          "number": 5,
+          "heading": "Recipes 5–8",
+          "markdown": "## 5 — RUST AND SCRAP  \n  \n*Scavengers, orks, anything held together with wire.*  \n\n  \n**The whole recipe is the rust step:** thin orange-brown contrast, laid on unevenly *on purpose*, over a silver drybrush. Uneven is correct here. This is the one recipe where sloppiness improves the result.  \n  \n## 6 — PALE AND ETHEREAL  \n  \n*Ghosts, spirits, anything that should look lit from inside.*  \n**⚠ This recipe breaks the method — read this before starting.**  \nPrime **white or light grey**, not black. Skip the grey drybrush. Do a light grey drybrush *into the recesses* instead of a white drybrush onto the edges. Then one coat of a bright, thin contrast — turquoise, pale blue or green.  \n\n  \n**Why it is here:** it is the only scheme that looks better with a light undercoat, and one glowing unit in an otherwise dark army is worth the inconsistency.  \n  \n## 7 — BLACK ARMOUR  \n  \n*The hard one. Black is not the absence of colour and it is not easy.*  \n**Do not use a black contrast paint over the slapchop base and expect it to work.** It floods everything, kills the grey map, and produces a flat dark smudge. Black armour needs a different approach.  \n\n  \n**The principle:** a black model needs its contrast from *outside* the model — a light base, bright metal, one warm spot colour. Trying to get contrast within the black itself is what makes black armies look like silhouettes.  \n  \n## 8 — DESERT SKIRMISHER  \n  \n*Light, warm, dusty. The fastest recipe on the sheet.*  \n\n  \n**Why it is fast:** every colour on the model is within two steps of every other colour, so mistakes at the edges do not show. Good first army. Bad choice if you want models that pop individually."
+        },
+        {
+          "number": 6,
+          "heading": "Basing and batching",
+          "markdown": "## Basing, in four moves  \n  \n1. **Texture** — paste or PVA-and-sand across the base, avoiding the model's feet.  \n2. **Drybrush one shade lighter** than the texture. Not two shades. One.  \n3. **Two or three tufts, placed off-centre.** Never in the middle, never evenly spaced, never one in each corner.  \n4. **Rim the base edge last**, in a single flat colour, with a loaded brush held sideways.  \n**Basing is the highest ratio of perceived finish to time spent in this entire sheet.** A tabletop model on a bare black base looks unfinished. The same model on textured ground with two tufts reads as done. It costs two minutes.  \n## Batch the unit, do not finish models  \n  \nDo **one step across the whole unit**, never one model to completion.  \nPrime ten. Drybrush ten. Drybrush ten again. Colour ten. Base ten.  \nThis is what makes this an army method rather than a model method. Two reasons, and the second is the important one:  \n* You stop reloading the same paint and rinsing the same brush ten times.  \n* **Your models match.** Colour matching drifts across a session. If you paint model one on Tuesday and model ten a fortnight later, they will not be the same green, and a mismatched squad is far more obvious on the table than a slightly rough highlight.  \n## Write the recipe down as you go  \n  \nRecord the **exact** paint names while the pots are still on the desk. Months later, when the army expands, you will not remember them. Page 8 is for this.  \n## Test one model first  \n  \nPaint **one** standalone model before committing the unit. It costs one model to find out a scheme does not work. It costs an army to find out later."
+        },
+        {
+          "number": 7,
+          "heading": "When it goes wrong",
+          "markdown": "## 1. \"It looks chalky and washed out.\"  \n  \n**Too much white drybrush.** The most common failure by a distance. The white pass is for edges and topmost points, not for the model. Fix: another coat of contrast over the affected area will pull the value back down. Prevention: wipe the brush until you think there is no paint left, then wipe it once more.  \n## 2. \"The colour went blotchy and patchy.\"  \n  \nYou went back over a panel that was half dry. Contrast paints reactivate and lift. Fix: one further thin coat across the **whole** panel, laid in one pass, no revisiting. Prevention: load the brush properly, work one panel start to finish, move on.  \n## 3. \"It pooled in the wrong places and looks dirty.\"  \n  \nToo much paint on the brush, and the model was probably held flat. Fix: while still wet, wick the excess off with a clean dry brush. Prevention: touch the brush to a paper towel before it touches the model, and turn the model as you work so gravity pulls paint toward the recesses rather than into flat panels.  \n## 4. \"The recesses aren't dark enough.\"  \n  \nYour grey drybrush was too heavy and got into the recesses. Fix: a thin dark wash into the recesses only. Prevention: less paint, lighter pressure, and drybrush *across* the detail rather than into it.  \n## 5. \"It looks flat and boring.\"  \n  \nAlmost always missing step 5. Ten minutes of edge highlighting on the few edges that catch the light will change the model more than any other ten minutes you can spend. If highlighting has not fixed it, the scheme itself is too low-contrast — see recipe 7 for the fix, which is to add contrast from the base and the metal rather than from the armour.  \n## The two-minute check  \n  \nPut the model on the table. Stand up. Look at it from where you actually sit when playing. **Everything you cannot see from there does not matter, and everything you can see from there is the whole product.** Most people paint detail nobody will ever look at and skip the base, which everybody sees."
+        },
+        {
+          "number": 8,
+          "heading": "Blank recipe sheet",
+          "markdown": "*Photocopy this page. Fill one in per army.*  \n```\nFACTION / ARMY: ________________________________\n\nPrimer:         ________________________________\nDrybrush 1:     ________________________________\nDrybrush 2:     ________________________________\n\nArmour:         ________________________________\nCloth:          ________________________________\nMetal:          ________________________________\nLeather:        ________________________________\nSkin:           ________________________________\nWeapon:         ________________________________\nSpot colour:    ________________________________\n\nHighlight:      ________________________________\n\nBase texture:   ________________________________\nBase drybrush:  ________________________________\nBase rim:       ________________________________\nTufts:          ________________________________\n\nNotes / what I would change: ____________________\n_________________________________________________\n_________________________________________________\n\n```\n  \n*Repeat the block twice more down the page.*  \n**Footer line:**  \nPersonal use. Print as many copies as you like for yourself. Please don't resell or redistribute the file."
+        }
+      ],
+      "badge": null,
+      "accent": "#3F5230",
+      "icon": "paintbrush",
+      "order": 3,
+      "status": "needs-content",
+      "contentGap": "The recipe tables on pages 2, 3, 4 and 5 exported as empty rows. The prose, method, troubleshooting and blank sheet are all intact. Fill the tables in this file and re-run `npm run pdf:build`; nothing else needs to change.",
+      "landscapePages": [],
+      "sourceNote": "miniature-speedpaint-recipe-sheet.md",
+      "files": [
+        {
+          "name": "miniature-speedpaint-recipe-sheet-A4.pdf",
+          "size": "A4",
+          "label": "A4"
+        },
+        {
+          "name": "miniature-speedpaint-recipe-sheet-Letter.pdf",
+          "size": "Letter",
+          "label": "US Letter"
+        }
+      ]
+    },
+    {
+      "type": "bundle",
+      "sku": "complete-bundle",
+      "name": "The Complete Set",
+      "subtitle": "3 guides · 20 pages · both paper sizes",
+      "blurb": "All three guides, both paper sizes, one download. Every card in the range for less than the price of two.",
+      "listingTitle": "The Complete Set",
+      "description": "All three guides, both paper sizes, one download. Every card in the range for less than the price of two.\n\nINCLUDED\n• Espresso Dial-In Troubleshooting Card — 6 pages\n• Keyboard Sound & Mod Chart — 6 pages\n• Miniature Speed-Paint Recipe Sheet — 8 pages\n\nEvery guide ships as two PDFs, A4 and US Letter, same content.\nInstant download. No physical item is shipped.",
+      "tags": [
+        "espresso guide",
+        "coffee cheat sheet",
+        "espresso dial in",
+        "home barista",
+        "barista gift",
+        "coffee bar decor",
+        "coffee lover gift",
+        "printable pdf",
+        "digital download",
+        "kitchen printable",
+        "coffee poster",
+        "espresso print",
+        "barista training"
+      ],
+      "priceMinor": 1400,
+      "savingMinor": 400,
+      "currency": "gbp",
+      "pageCount": 20,
+      "badge": "Save £4",
+      "accent": "#14110F",
+      "icon": "layer-group",
+      "order": 4,
+      "status": "needs-content",
+      "contentGap": null,
+      "includes": [
+        "espresso-dial-in-card",
+        "keyboard-sound-mod-chart",
+        "miniature-speedpaint-recipe-sheet"
+      ],
+      "files": [
+        {
+          "name": "espresso-dial-in-card-A4.pdf",
+          "size": "A4",
+          "label": "A4"
+        },
+        {
+          "name": "espresso-dial-in-card-Letter.pdf",
+          "size": "Letter",
+          "label": "US Letter"
+        },
+        {
+          "name": "keyboard-sound-mod-chart-A4.pdf",
+          "size": "A4",
+          "label": "A4"
+        },
+        {
+          "name": "keyboard-sound-mod-chart-Letter.pdf",
+          "size": "Letter",
+          "label": "US Letter"
+        },
+        {
+          "name": "miniature-speedpaint-recipe-sheet-A4.pdf",
+          "size": "A4",
+          "label": "A4"
+        },
+        {
+          "name": "miniature-speedpaint-recipe-sheet-Letter.pdf",
+          "size": "Letter",
+          "label": "US Letter"
+        }
+      ]
+    }
+  ],
+  "warnings": [
+    "keyboard-sound-mod-chart.md: dropped 7 empty table row(s) and 0 empty table(s) — check the source export",
+    "miniature-speedpaint-recipe-sheet.md: dropped 83 empty table row(s) and 11 empty table(s) — known content gap, see frontmatter"
+  ]
+}

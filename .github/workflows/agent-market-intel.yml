@@ -1,0 +1,56 @@
+name: Agent · Market intelligence
+
+# Fans out one research agent per product niche, adversarially checks every
+# finding, and opens a PR with the ranked action list.
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Mondays 07:00 UTC
+  workflow_dispatch:
+    inputs:
+      niches:
+        description: 'Optional JSON array of niches to scan instead of the default set'
+        required: false
+        default: ''
+
+concurrency:
+  group: agent-market-intel
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run the market-intel workflow
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            /market-intel ${{ inputs.niches }}
+
+            When the workflow finishes, commit the generated report under
+            docs/research/ to a new branch named
+            agent/market-intel-${{ github.run_number }} and open a pull request
+            titled "Market intelligence — week of <the report's date>".
+
+            The PR body should be the report's summary and its ranked action list.
+            Do not change prices, listings or product content in this PR — it is a
+            research report only.
+          claude_args: |
+            --allowed-tools Read,Write,Edit,Bash,Grep,Glob,WebSearch,WebFetch,Workflow,Agent
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}

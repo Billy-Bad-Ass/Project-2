@@ -1,0 +1,51 @@
+name: Agent · @claude mention
+
+# Lets anyone with write access drive the agent fleet from an issue or PR comment,
+# e.g. "@claude run /market-intel" or "@claude the espresso PDF page 2 is overflowing".
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+
+jobs:
+  respond:
+    if: contains(github.event.comment.body || github.event.issue.body, '@claude')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          trigger_phrase: "@claude"
+          prompt: |
+            Read docs/AGENTS.md first — it explains which subagent owns which part of
+            this store, and the slash commands available.
+
+            Delegate to the right subagent rather than doing everything yourself:
+            product-builder, content-editor, listing-copywriter, storefront-designer,
+            market-researcher, pricing-analyst, revenue-analyst, release-qa or
+            support-responder.
+
+            Never apply a live-mode Stripe change, and never commit a secret.
+          claude_args: |
+            --allowed-tools Read,Write,Edit,Bash,Grep,Glob,WebSearch,WebFetch,Workflow,Agent
