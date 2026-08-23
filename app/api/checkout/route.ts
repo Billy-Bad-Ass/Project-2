@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getItem, merchant } from '@/lib/catalog';
 import { stripe } from '@/lib/stripe';
+import { configuredSiteUrl } from '@/lib/site';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: `Unknown product: ${sku}` }, { status: 404 });
   }
 
-  const origin = request.headers.get('origin') ?? process.env.NEXT_PUBLIC_SITE_URL ?? '';
+  const origin = request.headers.get('origin')?.trim() || configuredSiteUrl();
   if (!origin) {
     return NextResponse.json(
       { error: 'Cannot determine the site origin. Set NEXT_PUBLIC_SITE_URL.' },
