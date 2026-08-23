@@ -68,6 +68,10 @@ A non-empty plan before release means the storefront and Stripe disagree about p
   domain — a wrong value silently breaks the download links in delivery emails while
   the site looks fine.
 - Secrets are set via `wrangler secret list`, not committed in `wrangler.jsonc`.
+- Nothing sensitive is a plain-text **var**. Check the deploy log for a wrangler
+  config-diff block listing a var whose name looks like a credential — if a value
+  is printed there in full, it was added as Text rather than Secret, it is now in
+  the Actions log, and it needs rotating as well as re-adding as a Secret.
 - The Stripe webhook endpoint exists and is subscribed to
   `checkout.session.completed`.
 

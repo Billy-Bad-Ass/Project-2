@@ -27,6 +27,12 @@
     "enabled": true
   },
 
+  // Do not delete variables that were added in the Cloudflare dashboard but are
+  // absent from this file. Without this, `wrangler deploy` silently wipes them,
+  // so anything configured through the UI vanishes on the next deploy.
+  // Secrets are preserved either way — this only protects plain-text vars.
+  "keep_vars": true,
+
   "r2_buckets": [
     {
       "binding": "DOWNLOADS",

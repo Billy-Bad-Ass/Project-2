@@ -46,9 +46,15 @@ deploys the Worker.
    prints the deployed URL and the health result.
 5. **Add the Worker's own secrets** in the Cloudflare dashboard —
    Workers & Pages → `bba-network-store` → Settings → Variables and Secrets →
-   *Add*, type **Secret**: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
+   *Add*: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
    `DOWNLOAD_SIGNING_SECRET`. The Worker has to exist first, so this comes after
    the first deploy.
+
+   **The type dropdown must say `Secret`, not `Text`.** A value added as Text is
+   readable by anyone with dashboard access and — worse — gets printed in full
+   into the GitHub Actions log on the next deploy, because wrangler diffs local
+   config against remote and shows what differs. If that happens, treat the
+   value as leaked and rotate it. Secrets never appear in that diff.
 6. **GitHub → Settings → Secrets and variables → Actions → Variables.** Add
    `SITE_URL` set to the deployed origin, then run the workflow once more —
    `NEXT_PUBLIC_SITE_URL` is inlined at build time, so it needs a rebuild rather
