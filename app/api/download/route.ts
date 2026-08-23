@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { verifyDownloadToken, isSafeFileName } from '@/lib/download-token';
-import { entitlementsFor, isPaid } from '@/lib/entitlements';
+import { entitlementsFor, isPaid, isRevoked } from '@/lib/entitlements';
 import { readProductFile, storageBackend } from '@/lib/storage';
 
 export const runtime = 'nodejs';
@@ -16,10 +16,11 @@ const deny = (message: string, status: number) =>
 /**
  * Streams a purchased PDF.
  *
- * Three gates, all of which must pass:
+ * Four gates, all of which must pass:
  *   1. the link carries a valid, unexpired HMAC signature
  *   2. Stripe still reports the referenced session as paid
- *   3. that session's entitlements actually include the requested file
+ *   3. the money has not gone back out — no refund, no dispute
+ *   4. that session's entitlements actually include the requested file
  */
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get('token');
@@ -38,13 +39,15 @@ export async function GET(request: NextRequest) {
   let session;
   try {
     session = await stripe().checkout.sessions.retrieve(sessionId, {
-      expand: ['line_items.data.price.product'],
+      // latest_charge carries the refund and dispute state. Same round trip.
+      expand: ['line_items.data.price.product', 'payment_intent.latest_charge'],
     });
   } catch {
     return deny('Could not verify this purchase.', 403);
   }
 
   if (!isPaid(session)) return deny('This order has not been paid.', 403);
+  if (isRevoked(session)) return deny('This order has been refunded.', 403);
 
   const permitted = entitlementsFor(session).some((e) => e.files.some((f) => f.name === file));
   if (!permitted) return deny('This order does not include that file.', 403);

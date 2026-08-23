@@ -15,8 +15,50 @@ export type Entitlement = {
   files: CatalogFile[];
 };
 
+/**
+ * Whether Stripe has the money.
+ *
+ * `status: 'complete'` is NOT that question, and must not be part of it. A
+ * delayed-notification method — Klarna, Cash App and Amazon Pay are all enabled
+ * on this account — completes the Checkout Session immediately and settles
+ * later, so the session is `complete` while `payment_status` is still `unpaid`.
+ * Treating complete as paid handed the file over before the money arrived, and
+ * `checkout.session.async_payment_failed` then had nothing to take back.
+ *
+ * `no_payment_required` is a 100%-off promotion code, which the merchant issued
+ * deliberately, so it counts.
+ */
 export function isPaid(session: Stripe.Checkout.Session): boolean {
-  return session.payment_status === 'paid' || session.status === 'complete';
+  return (
+    session.payment_status === 'paid' || session.payment_status === 'no_payment_required'
+  );
+}
+
+/**
+ * Whether the money went back.
+ *
+ * Stripe leaves `payment_status: 'paid'` and `status: 'complete'` untouched by a
+ * refund or a dispute, so isPaid() cannot see either. Without this a refunded
+ * buyer keeps every link that still has time on it, and can mint fresh ones from
+ * the receipt page indefinitely.
+ *
+ * Reading it needs `expand: ['payment_intent.latest_charge']` on the session.
+ * Unexpanded, this returns false — callers that care must expand, and the
+ * download route does.
+ */
+export function isRevoked(session: Stripe.Checkout.Session): boolean {
+  const intent = session.payment_intent;
+  if (!intent || typeof intent === 'string') return false;
+
+  const charge = intent.latest_charge;
+  if (!charge || typeof charge === 'string') return false;
+
+  if (charge.refunded) return true;
+  if (charge.disputed) return true;
+
+  // A partial refund still leaves the buyer holding most of their money, and a
+  // single guide is not divisible, so any refund at all revokes it.
+  return charge.amount_refunded > 0;
 }
 
 /** The skus a session paid for — from metadata first, line items as a fallback. */

@@ -43,8 +43,10 @@ PDFs live in R2, not in the bundle, so a deploy alone does not update them.
   will not fit, trim the note — do not lower `MIN_ZOOM` in `scripts/build-pdfs.mjs`.
 - **Never write to live-mode Stripe** without an explicit human go-ahead.
   `scripts/stripe-sync.mjs` guards this; do not route around it.
-- **The three download gates stay.** `app/api/download/route.ts` checks signature,
-  Stripe-says-paid, and entitlement. Removing any one is a security regression.
+- **The four download gates stay.** `app/api/download/route.ts` checks signature,
+  Stripe-says-paid, not-refunded, and entitlement. Removing any one is a security
+  regression. "Paid" means `payment_status`, never `status: 'complete'` — Klarna and
+  Cash App complete the session before the money lands.
 - **Prices are pence.** `500` is £5.00.
 - **The R2 bucket stays private.** No public bucket URL. The paywall is the download
   route; anything reachable around it is free product.
