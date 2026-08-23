@@ -27,6 +27,19 @@
     "enabled": true
   },
 
+  // The store answers on bbanetwork.org. www is attached so it does not dead-end;
+  // the canonical link tags point search engines at the apex.
+  "routes": [
+    { "pattern": "bbanetwork.org", "custom_domain": true },
+    { "pattern": "www.bbanetwork.org", "custom_domain": true }
+  ],
+
+  // Explicit because wrangler defaults this to FALSE as soon as `routes` exists,
+  // which would take the workers.dev address down with the same deploy that
+  // brings the domain up. The Stripe webhook endpoint still points there, so
+  // losing it silently means paid orders stop being delivered.
+  "workers_dev": true,
+
   // Do not delete variables that were added in the Cloudflare dashboard but are
   // absent from this file. Without this, `wrangler deploy` silently wipes them,
   // so anything configured through the UI vanishes on the next deploy.
@@ -43,7 +56,7 @@
 
   "vars": {
     // Public, non-secret values only. Anything sensitive goes in `wrangler secret put`.
-    "NEXT_PUBLIC_SITE_URL": "https://bba-network-store.bbacentralworkspace.workers.dev",
+    "NEXT_PUBLIC_SITE_URL": "https://bbanetwork.org",
     "STRIPE_AUTOMATIC_TAX": "false"
   }
 }
