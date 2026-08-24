@@ -112,6 +112,16 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
+      - name: Verify sellable PDFs exist in the production bucket
+        # Not skippable, deliberately. skip_upload above is fine when the PDFs
+        # have not changed — but a storefront must never go live listing a file
+        # the bucket does not hold, because that store takes the money and then
+        # 500s on the download. Read-only check via the same token.
+        run: node scripts/verify-r2-downloads.mjs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
       - name: Deploy the Worker
         id: deploy
         run: |
