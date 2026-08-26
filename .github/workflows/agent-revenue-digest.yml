@@ -33,7 +33,36 @@ jobs:
 
       - run: npm ci
 
+      - id: start
+        run: echo "started=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
+      - name: Tell the dashboard a run started
+        # A reporting problem must not fail the agent run, and must not look
+        # like it worked either. See .github/actions/report-run.
+        uses: ./.github/actions/report-run
+        with:
+          agent: revenue-analyst
+          project_slug: project-2
+          trigger: ${{ github.event_name == 'schedule' && 'cron' || 'manual' }}
+          status: running
+          started_at: ${{ steps.start.outputs.started }}
+          summary: Revenue digest started.
+          artifact_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          dashboard_url: ${{ secrets.DASHBOARD_URL }}
+          dashboard_token: ${{ secrets.DASHBOARD_TOKEN }}
+          access_client_id: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          access_client_secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+
+      - name: Is a Claude credential configured?
+        id: investigator
+        uses: ./.github/actions/investigator
+        with:
+          oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
       - name: Produce the digest
+        id: digest
+        if: steps.investigator.outputs.ready == 'true'
         uses: anthropics/claude-code-action@v1
         with:
           # Prefer the Claude subscription token when it is set: on a Max plan
@@ -58,3 +87,31 @@ jobs:
             --allowed-tools Read,Write,Bash,Grep,Glob,Agent
         env:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+
+      - name: Say why nothing was produced
+        if: always() && steps.investigator.outputs.ready != 'true'
+        run: |
+          echo "::warning title=No revenue digest produced::Neither CLAUDE_CODE_OAUTH_TOKEN nor ANTHROPIC_API_KEY is set in this repository, so the agent step was skipped. Refunds, disputes and undelivered checkouts went unchecked for this period — the reason this job exists. Run 'claude setup-token' and store the result as CLAUDE_CODE_OAUTH_TOKEN under Settings -> Secrets and variables -> Actions."
+
+      - name: Report the outcome
+        if: always()
+        uses: ./.github/actions/report-run
+        with:
+          agent: revenue-analyst
+          project_slug: project-2
+          trigger: ${{ github.event_name == 'schedule' && 'cron' || 'manual' }}
+          started_at: ${{ steps.start.outputs.started }}
+          status: >-
+            ${{ steps.digest.outcome == 'failure' && 'failed'
+            || job.status == 'failure' && 'failed'
+            || steps.investigator.outputs.ready != 'true' && 'skipped'
+            || 'ok' }}
+          summary: >-
+            ${{ steps.investigator.outputs.ready == 'true'
+            && 'Revenue digest.'
+            || 'Skipped: no Claude credential is configured in this repository.' }}
+          artifact_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          dashboard_url: ${{ secrets.DASHBOARD_URL }}
+          dashboard_token: ${{ secrets.DASHBOARD_TOKEN }}
+          access_client_id: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          access_client_secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}

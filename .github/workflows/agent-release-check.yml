@@ -32,7 +32,36 @@ jobs:
       - name: Install Chromium for PDF generation
         run: npx playwright install --with-deps chromium
 
+      - id: start
+        run: echo "started=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
+      - name: Tell the dashboard a run started
+        # A reporting problem must not fail the agent run, and must not look
+        # like it worked either. See .github/actions/report-run.
+        uses: ./.github/actions/report-run
+        with:
+          agent: release-qa
+          project_slug: project-2
+          trigger: ${{ github.event_name == 'push' && 'github' || 'manual' }}
+          status: running
+          started_at: ${{ steps.start.outputs.started }}
+          summary: Pre-deploy verification started for ${{ github.ref_name }}.
+          artifact_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          dashboard_url: ${{ secrets.DASHBOARD_URL }}
+          dashboard_token: ${{ secrets.DASHBOARD_TOKEN }}
+          access_client_id: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          access_client_secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+
+      - name: Is a Claude credential configured?
+        id: investigator
+        uses: ./.github/actions/investigator
+        with:
+          oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
       - name: Run the release check
+        id: check
+        if: steps.investigator.outputs.ready == 'true'
         uses: anthropics/claude-code-action@v1
         with:
           # Prefer the Claude subscription token when it is set: on a Max plan
@@ -58,3 +87,31 @@ jobs:
             --allowed-tools Read,Write,Bash,Grep,Glob,Workflow,Agent
         env:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+
+      - name: Say why nothing was checked
+        if: always() && steps.investigator.outputs.ready != 'true'
+        run: |
+          echo "::error title=Release NOT verified::Neither CLAUDE_CODE_OAUTH_TOKEN nor ANTHROPIC_API_KEY is set in this repository, so no release check ran for ${{ github.ref_name }}. This is not a GO — it is no verdict at all. Run 'claude setup-token' and store the result as CLAUDE_CODE_OAUTH_TOKEN under Settings -> Secrets and variables -> Actions."
+
+      - name: Report the outcome
+        if: always()
+        uses: ./.github/actions/report-run
+        with:
+          agent: release-qa
+          project_slug: project-2
+          trigger: ${{ github.event_name == 'push' && 'github' || 'manual' }}
+          started_at: ${{ steps.start.outputs.started }}
+          status: >-
+            ${{ steps.check.outcome == 'failure' && 'failed'
+            || job.status == 'failure' && 'failed'
+            || steps.investigator.outputs.ready != 'true' && 'skipped'
+            || 'ok' }}
+          summary: >-
+            ${{ steps.investigator.outputs.ready == 'true'
+            && format('Pre-deploy verification for {0}.', github.ref_name)
+            || format('Skipped: no Claude credential is configured, so {0} shipped unverified.', github.ref_name) }}
+          artifact_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          dashboard_url: ${{ secrets.DASHBOARD_URL }}
+          dashboard_token: ${{ secrets.DASHBOARD_TOKEN }}
+          access_client_id: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          access_client_secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}

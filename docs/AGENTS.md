@@ -83,9 +83,36 @@ Set in **Settings → Secrets and variables → Actions**:
 
 | Secret | Used by | Notes |
 | --- | --- | --- |
-| `ANTHROPIC_API_KEY` | every agent job | Required |
+| `CLAUDE_CODE_OAUTH_TOKEN` | every agent job | Preferred. `claude setup-token` produces it, and on a Max plan these runs cost nothing |
+| `ANTHROPIC_API_KEY` | every agent job | The alternative to the above. Bills per token; ignored when the OAuth token is set |
 | `STRIPE_SECRET_KEY` | revenue digest, release check | **Restricted read-only key** — see below |
 | `FIRECRAWL_API_KEY` | market intel, listing refresh | Optional; those jobs degrade to WebSearch |
+| `DASHBOARD_URL` | every agent job | Base URL of Project 4's console. Absent, runs are recorded nowhere |
+| `DASHBOARD_TOKEN` | every agent job | Must equal the value on the `bba-heartbeat` Worker |
+| `CF_ACCESS_CLIENT_ID` | every agent job | Access service token id, ending `.access`. The console sits behind Access |
+| `CF_ACCESS_CLIENT_SECRET` | every agent job | Its secret. Shown once, at creation |
+
+**One of `CLAUDE_CODE_OAUTH_TOKEN` or `ANTHROPIC_API_KEY` must exist or no agent
+here does anything.** Neither was ever set, which is why every scheduled run in
+this repository has failed since the day the workflows were written. The jobs now
+say so in one line and report `skipped` rather than dying on a validation error
+buried 200 lines into a log.
+
+## Reporting to the console
+
+Project 4 owns the portfolio view. This repository keeps no run log of its own —
+each job posts what happened to `POST /api/agent-runs` and stops.
+
+Two steps per workflow: one `running` on the way in, one `if: always()` on the way
+out carrying `ok`, `failed` or `skipped`. Both go through
+`.github/actions/report-run`, which exists so that a reporting problem can never
+fail a run and can never be mistaken for a successful one. `curl -sf ... || true`
+manages neither: with `DASHBOARD_URL` unset it posts nothing and exits 0, and it
+treats Cloudflare Access's 302 to a login page as a success.
+
+The agent names in the `agent:` field are not free text. They must match Project
+4's `config/agents.ts` exactly, or the console files the run under an agent it has
+never heard of.
 
 Create the Stripe key at *Developers → API keys → Restricted keys* with read
 permission on Charges, Checkout Sessions, Customers, Products and Prices, and **write
