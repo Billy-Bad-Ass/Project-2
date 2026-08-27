@@ -38,15 +38,25 @@ Two secrets. Both go in **GitHub → Settings → Secrets and variables → Acti
 on this repository — the deploy pushes them onto the Worker, so there is no
 Cloudflare dashboard step and no terminal.
 
-### 1. `STRIPE_SECRET_KEY`
+### 1. `STRIPE_SECRET_KEY` — already done
 
-The **live** secret key for `acct_1U7Km3R7EyLACZsr` — Stripe Dashboard, live
-mode on, Developers → API keys → Secret key. It starts `sk_live_`.
+This is **already an `sk_live_` key**, as of 2026-08-27.
 
-This is a change of *account*, not just of mode: the store has been running on
-the **BBA Network sandbox** account, and live mode exists only on the main one.
+Not inferred: `Agent · Checkout end-to-end` refused to start against it, with
+`refusing to run: STRIPE_SECRET_KEY is a LIVE key`. That check reads the prefix
+before making any network call, which is how it is known without the value ever
+being printed.
 
-### 2. `STRIPE_WEBHOOK_SECRET`
+It has not reached the Worker. The store has not deployed since 2026-08-23, and
+the deploy is what copies GitHub's secrets onto it — so the running store is
+still on the sandbox test key, and **the deploy in step 4 is the actual switch.**
+
+Note this is a change of *account*, not just of mode: the store has been running
+on the **BBA Network sandbox** account, and live mode exists only on the main
+one, `acct_1U7Km3R7EyLACZsr`. That is the account the live products above were
+created on.
+
+### 2. `STRIPE_WEBHOOK_SECRET` — do this before step 4
 
 The signing secret belonging to `we_1U92juR7EyLACZsrTsbOOPfx`. Stripe Dashboard
 → Developers → Webhooks → *BBA Network store — digital download delivery
@@ -55,18 +65,31 @@ The signing secret belonging to `we_1U92juR7EyLACZsrTsbOOPfx`. Stripe Dashboard
 It is not written down here on purpose. A signing secret in a repository is a
 signing secret that needs rotating.
 
-### 3. `STRIPE_TEST_SECRET_KEY` — before you change the one above
+**This one is the ordering hazard.** The Worker currently holds the *sandbox*
+endpoint's signing secret. Deploy the live key without replacing it and the
+store goes live with a webhook that cannot verify a single delivery: every
+signature check fails, so no delivery email is ever sent.
 
-The **sandbox** account's test key: whatever `STRIPE_SECRET_KEY` holds right
-now, copied into a second secret named `STRIPE_TEST_SECRET_KEY`.
+It fails quietly rather than loudly, because the success page — not the webhook
+— is the primary delivery route, and it would keep working. A buyer who closes
+the tab before downloading is the one who loses. Refund revocation also keeps
+working, since gate 3 reads Stripe live rather than trusting a webhook.
+
+So: degraded, not broken, and invisible unless you look. Set this first.
+
+### 3. `STRIPE_TEST_SECRET_KEY` — overdue
+
+The **sandbox** account's test key, from the sandbox dashboard: Developers →
+API keys → Secret key. It starts `sk_test_`.
 
 `Agent · Checkout end-to-end` buys a guide and refunds it, so it refuses to run
-against a live key — correctly. It reads `STRIPE_TEST_SECRET_KEY` first and
-falls back to `STRIPE_SECRET_KEY`, so without this step, going live quietly
-retires the only test that proves a buyer still receives what they paid for.
+against a live key. It reads `STRIPE_TEST_SECRET_KEY` first and falls back to
+`STRIPE_SECRET_KEY` — and since the latter is now live, **the test cannot run at
+all until this is set.** That is the state today: the only check that proves a
+buyer still receives what they paid for is currently refusing to start.
 
-Do this one first. It costs nothing and it is easy to forget once the live key
-is in place and the old value is gone.
+This was meant to be copied from `STRIPE_SECRET_KEY` before it was replaced.
+That moment has passed, so it comes from the sandbox dashboard instead.
 
 ### 4. Deploy
 
