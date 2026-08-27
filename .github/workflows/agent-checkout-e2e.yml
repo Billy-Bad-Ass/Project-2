@@ -82,6 +82,22 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
 
+      # A signing secret that exists only for this run.
+      #
+      # lib/download-token.ts throws unless DOWNLOAD_SIGNING_SECRET is at least
+      # 32 characters, so the success page cannot mint a link without one — the
+      # first run of this workflow got as far as starting the store and would
+      # have died there.
+      #
+      # It deliberately does NOT reuse the production value. Every token minted
+      # here is verified by the same process seconds later, so the two only have
+      # to agree with each other; and a throwaway secret means this workflow
+      # needs no secret it could leak, and cannot mint a link that works against
+      # the deployed store.
+      - name: Mint a signing secret for this run
+        id: signing
+        run: echo "secret=$(openssl rand -base64 48 | tr -d '\n')" >> "$GITHUB_OUTPUT"
+
       - name: Start the store
         run: |
           npx next start -p 3000 -H 127.0.0.1 > /tmp/store.log 2>&1 &
@@ -98,7 +114,7 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_TEST_SECRET_KEY || secrets.STRIPE_SECRET_KEY }}
-          DOWNLOAD_SIGNING_SECRET: ${{ secrets.DOWNLOAD_SIGNING_SECRET }}
+          DOWNLOAD_SIGNING_SECRET: ${{ steps.signing.outputs.secret }}
 
       - name: Buy something
         run: |
