@@ -1,0 +1,103 @@
+name: Agent · Checkout end-to-end
+
+# Proves a customer can pay and receive the file.
+#
+# The unit suite checks each of the four download gates against fabricated
+# Stripe objects. This checks the thing they cannot: that a real payment on a
+# real Stripe account, through the real hosted Checkout page, ends with the
+# buyer holding the PDF — and stops working the moment it is refunded.
+#
+# It runs the store on localhost inside the runner, so the deployed Worker is
+# never touched. It needs a runner rather than a Cloudflare session because the
+# hosted Checkout page has to be driven in a browser.
+#
+# TEST MODE ONLY. scripts/e2e-checkout.mjs aborts before its first network call
+# if STRIPE_SECRET_KEY is a live key, because it creates a real charge and a
+# real refund.
+
+on:
+  workflow_dispatch:
+    inputs:
+      sku:
+        description: 'Which product to buy'
+        required: false
+        default: 'espresso-dial-in-card'
+      keep_paid:
+        description: 'Skip the refund step and leave the test order paid'
+        type: boolean
+        default: false
+  schedule:
+    # Weekly, so a break in the paid path is found by us rather than by a buyer.
+    - cron: '25 6 * * 1'
+
+concurrency:
+  group: checkout-e2e
+  cancel-in-progress: false
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Check the Stripe key is present
+        # Failing here with a readable message beats failing inside Playwright.
+        # The value is never echoed; only whether it exists.
+        run: |
+          if [ -z "${{ secrets.STRIPE_SECRET_KEY }}" ]; then
+            echo "::error::STRIPE_SECRET_KEY is not set. Add it under Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+      - run: npm ci
+
+      - name: Build the catalogue and the PDFs
+        # The download route streams a real file, so the files have to exist.
+        # Locally that is the filesystem backend, not R2.
+        run: |
+          npm run catalog:build
+          npx playwright install --with-deps chromium
+          npm run pdf:build
+
+      - name: Build the store
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+
+      - name: Start the store
+        run: |
+          npx next start -p 3000 -H 127.0.0.1 > /tmp/store.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:3000/ > /dev/null; then
+              echo "store is up"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::the store did not start"
+          cat /tmp/store.log
+          exit 1
+        env:
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          DOWNLOAD_SIGNING_SECRET: ${{ secrets.DOWNLOAD_SIGNING_SECRET }}
+
+      - name: Buy something
+        run: |
+          node scripts/e2e-checkout.mjs \
+            --origin http://127.0.0.1:3000 \
+            --sku "${{ inputs.sku || 'espresso-dial-in-card' }}" \
+            ${{ inputs.keep_paid && '--keep-paid' || '' }}
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+
+      - name: Store log on failure
+        if: failure()
+        run: tail -100 /tmp/store.log
