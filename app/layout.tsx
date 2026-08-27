@@ -12,9 +12,10 @@ export const metadata: Metadata = {
     template: `%s — ${merchant.name}`,
   },
   description: merchant.tagline,
-  // www.bbanetwork.org is attached to the same Worker rather than redirected, so
-  // both hostnames serve the identical page. This tells search engines which one
-  // is the real address instead of leaving them to split the ranking.
+  // Resolved against NEXT_PUBLIC_SITE_URL (guides.bbanetwork.org), so every page
+  // names itself as the canonical address. The hub forwards the legacy apex URLs
+  // here with a 301, which is what moves the search authority rather than
+  // splitting it across two hostnames.
   alternates: { canonical: './' },
   openGraph: {
     type: 'website',

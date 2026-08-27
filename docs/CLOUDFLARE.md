@@ -122,19 +122,41 @@ what is wrong — files not uploaded, or a secret not set.
 
 ## The domain
 
-The store answers on **bbanetwork.org**, registered through Cloudflare. Both the
-apex and `www` are attached to the Worker in the `routes` block of
-`wrangler.jsonc`, so the deploy creates the DNS records and certificates itself
-— there is nothing to click.
+The store answers on **guides.bbanetwork.org**, attached to the Worker in the
+`routes` block of `wrangler.jsonc`, so the deploy creates the DNS record and
+certificate itself — there is nothing to click.
+
+### It used to be the apex, and that is why this section matters
+
+Until 2026-08-24 the store served `bbanetwork.org` itself. On that day the apex
+was reattached to `bba-network-hub` — Project 6, the brand hub that names all
+three businesses — and the store moved to `guides.`.
+
+**This file and `wrangler.jsonc` were not updated at the time.** Both went on
+claiming the apex and `www` for another three days. The store happens not to
+have been deployed in that window, which is the only reason nothing broke: the
+next deploy would either have taken the apex back off the hub, or failed
+outright when wrangler found the hostname attached elsewhere.
+
+Two rules fall out of that, and they are worth keeping:
+
+- **Never add `bbanetwork.org` or `www.bbanetwork.org` to `routes` here.** They
+  belong to the hub. `web-6/docs/DOMAINS.md` is the register for which host
+  serves what, and `web-6/src/redirects.ts` is what forwards every legacy apex
+  URL to this store.
+- **A hostname in `routes` is a claim on a shared zone, not a local setting.**
+  Two repos can both believe they own a host, and nothing tells you until a
+  deploy resolves the disagreement in whichever direction wrangler happens to
+  pick.
 
 `workers_dev` is set to `true` in the same file, deliberately. Wrangler flips it
 to `false` the moment `routes` exists, and the `*.workers.dev` address is the
 fallback the Stripe webhook was first pointed at, so losing it silently would
 stop paid orders being delivered.
 
-`www` is attached rather than redirected: both hostnames serve the same pages,
-and the canonical link tag from `app/layout.tsx` tells search engines the apex is
-the real one. A redirect would need a Cloudflare rule outside this repo.
+The canonical link tag from `app/layout.tsx` resolves against
+`NEXT_PUBLIC_SITE_URL`, so it names `guides.bbanetwork.org` — which is now the
+only hostname this Worker claims.
 
 ### Moving to a different domain
 
