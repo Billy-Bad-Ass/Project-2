@@ -55,7 +55,20 @@ The signing secret belonging to `we_1U92juR7EyLACZsrTsbOOPfx`. Stripe Dashboard
 It is not written down here on purpose. A signing secret in a repository is a
 signing secret that needs rotating.
 
-### 3. Deploy
+### 3. `STRIPE_TEST_SECRET_KEY` — before you change the one above
+
+The **sandbox** account's test key: whatever `STRIPE_SECRET_KEY` holds right
+now, copied into a second secret named `STRIPE_TEST_SECRET_KEY`.
+
+`Agent · Checkout end-to-end` buys a guide and refunds it, so it refuses to run
+against a live key — correctly. It reads `STRIPE_TEST_SECRET_KEY` first and
+falls back to `STRIPE_SECRET_KEY`, so without this step, going live quietly
+retires the only test that proves a buyer still receives what they paid for.
+
+Do this one first. It costs nothing and it is easy to forget once the live key
+is in place and the old value is gone.
+
+### 4. Deploy
 
 **Actions → Deploy to Cloudflare → Run workflow.** The job summary prints the
 health result. You want:

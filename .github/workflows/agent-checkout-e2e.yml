@@ -12,8 +12,12 @@ name: Agent · Checkout end-to-end
 # hosted Checkout page has to be driven in a browser.
 #
 # TEST MODE ONLY. scripts/e2e-checkout.mjs aborts before its first network call
-# if STRIPE_SECRET_KEY is a live key, because it creates a real charge and a
-# real refund.
+# unless the key it is given is recognisably a test key, because it creates a
+# real charge and a real refund.
+#
+# It prefers STRIPE_TEST_SECRET_KEY and falls back to STRIPE_SECRET_KEY. Once
+# the store goes live the latter holds an sk_live_ key and the script will
+# refuse it, so set the former before then — see docs/GO-LIVE.md.
 
 on:
   workflow_dispatch:
@@ -47,12 +51,19 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Check the Stripe key is present
+      - name: Check a test-mode Stripe key is present
         # Failing here with a readable message beats failing inside Playwright.
-        # The value is never echoed; only whether it exists.
+        # Neither value is ever echoed; only whether one exists.
+        #
+        # STRIPE_TEST_SECRET_KEY first, STRIPE_SECRET_KEY second. That order is
+        # what keeps this workflow working after the store goes live: from that
+        # point STRIPE_SECRET_KEY holds an sk_live_ key, and the script refuses
+        # to run against it — correctly, since this buys something and then
+        # refunds it. Without a dedicated test key, going live silently retires
+        # the only test that proves buyers can still receive what they paid for.
         run: |
-          if [ -z "${{ secrets.STRIPE_SECRET_KEY }}" ]; then
-            echo "::error::STRIPE_SECRET_KEY is not set. Add it under Settings -> Secrets and variables -> Actions."
+          if [ -z "${{ secrets.STRIPE_TEST_SECRET_KEY }}" ] && [ -z "${{ secrets.STRIPE_SECRET_KEY }}" ]; then
+            echo "::error::Neither STRIPE_TEST_SECRET_KEY nor STRIPE_SECRET_KEY is set. Add a test-mode key under Settings -> Secrets and variables -> Actions."
             exit 1
           fi
 
@@ -86,7 +97,7 @@ jobs:
           exit 1
         env:
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_TEST_SECRET_KEY || secrets.STRIPE_SECRET_KEY }}
           DOWNLOAD_SIGNING_SECRET: ${{ secrets.DOWNLOAD_SIGNING_SECRET }}
 
       - name: Buy something
@@ -96,7 +107,7 @@ jobs:
             --sku "${{ inputs.sku || 'espresso-dial-in-card' }}" \
             ${{ inputs.keep_paid && '--keep-paid' || '' }}
         env:
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_TEST_SECRET_KEY || secrets.STRIPE_SECRET_KEY }}
 
       - name: Store log on failure
         if: failure()
