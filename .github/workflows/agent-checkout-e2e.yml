@@ -61,11 +61,16 @@ jobs:
         # to run against it — correctly, since this buys something and then
         # refunds it. Without a dedicated test key, going live silently retires
         # the only test that proves buyers can still receive what they paid for.
-        run: |
-          if [ -z "${{ secrets.STRIPE_TEST_SECRET_KEY }}" ] && [ -z "${{ secrets.STRIPE_SECRET_KEY }}" ]; then
-            echo "::error::Neither STRIPE_TEST_SECRET_KEY nor STRIPE_SECRET_KEY is set. Add a test-mode key under Settings -> Secrets and variables -> Actions."
-            exit 1
-          fi
+        #
+        # It also names which secret holds what. The script's own refusal says
+        # "STRIPE_SECRET_KEY is a LIVE key" whether the fallback fired or
+        # STRIPE_TEST_SECRET_KEY itself holds a live key — both arrive under the
+        # same variable name. Telling those apart cost two rounds of guessing on
+        # 2026-08-27, so the answer is now printed before the test starts.
+        run: bash scripts/check-stripe-keys.sh
+        env:
+          SECRET_STRIPE_TEST_SECRET_KEY: ${{ secrets.STRIPE_TEST_SECRET_KEY }}
+          SECRET_STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
 
       - run: npm ci
 
