@@ -100,13 +100,90 @@ const browser = await chromium.launch();
 const page = await browser.newPage();
 await page.goto(checkoutUrl, { waitUntil: 'domcontentloaded' });
 
-await page.getByPlaceholder('1234 1234 1234 1234').fill('4242424242424242');
-await page.getByPlaceholder('MM / YY').fill('12 / 34');
-await page.getByPlaceholder('CVC').fill('123');
-const name = page.getByPlaceholder('Full name on card');
-if (await name.count()) await name.fill('BBA Test Buyer');
-const postal = page.getByPlaceholder('12345');
-if (await postal.count()) await postal.fill('12345');
+/**
+ * Find a field on the hosted Checkout page, wherever Stripe has put it.
+ *
+ * The first run that ever reached this page timed out on
+ * `page.getByPlaceholder('1234 1234 1234 1234')` after 30s. Everything before
+ * it passed — the Session was created on the synced price — so the payment
+ * form was reachable and the selector simply did not match what was rendered.
+ *
+ * Two things make a single page-level locator unreliable here, and neither is
+ * under our control:
+ *
+ *   - Stripe renders the card inputs in a nested iframe in some versions of
+ *     the hosted page and directly in the document in others.
+ *   - The form hydrates after domcontentloaded, so a locator can resolve
+ *     against a page that has not drawn the field yet.
+ *
+ * So: search the document and every frame, and keep looking until the field
+ * appears or the deadline passes. This is not a guess at a different
+ * selector — it is the same selector, applied everywhere it could legally be.
+ */
+async function findField(placeholder, { timeoutMs = 45_000, required = true } = {}) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    for (const frame of [page, ...page.frames()]) {
+      const field = frame.getByPlaceholder(placeholder).first();
+      try {
+        if (await field.isVisible({ timeout: 500 })) return field;
+      } catch {
+        // A frame can detach mid-search as Stripe swaps the form in. That is
+        // normal; keep looking rather than failing on it.
+      }
+    }
+    await page.waitForTimeout(500);
+  }
+  if (!required) return null;
+  await describePage(placeholder);
+  throw new Error(`could not find the "${placeholder}" field on the Checkout page`);
+}
+
+/**
+ * Say what was actually on the page when a field could not be found.
+ *
+ * Without this the failure is "timeout waiting for a placeholder", which does
+ * not distinguish a renamed field from a Link interstitial from an error page
+ * — and each needs a different fix. The screenshot is uploaded as an artifact
+ * by the workflow.
+ */
+async function describePage(missing) {
+  console.log(`\n  could not find "${missing}". What the page actually had:\n`);
+  console.log(`  url    ${page.url()}`);
+  console.log(`  title  ${await page.title().catch(() => '(none)')}`);
+  for (const frame of [page, ...page.frames()]) {
+    const inputs = await frame
+      .evaluate(() =>
+        [...document.querySelectorAll('input')].map((i) =>
+          [i.placeholder, i.name, i.id, i.type].filter(Boolean).join(' | '),
+        ),
+      )
+      .catch(() => []);
+    if (inputs.length) {
+      console.log(`  frame  ${frame.url?.() ?? '(document)'}`);
+      for (const i of inputs) console.log(`         input: ${i}`);
+    }
+  }
+  const text = await page.evaluate(() => document.body?.innerText?.slice(0, 600) ?? '').catch(() => '');
+  if (text) console.log(`\n  visible text:\n${text.split('\n').map((l) => '    ' + l).join('\n')}`);
+  await page.screenshot({ path: 'checkout-failure.png', fullPage: true }).catch(() => {});
+  console.log('\n  screenshot saved to checkout-failure.png\n');
+}
+
+// Stripe may offer to pay with a saved Link account before showing the form.
+// Dismissing it is what puts the card fields on screen.
+const payAnotherWay = page.getByRole('button', { name: /pay another way|use a different|enter card/i }).first();
+if (await payAnotherWay.isVisible({ timeout: 3000 }).catch(() => false)) {
+  await payAnotherWay.click().catch(() => {});
+}
+
+await (await findField('1234 1234 1234 1234')).fill('4242424242424242');
+await (await findField('MM / YY')).fill('12 / 34');
+await (await findField('CVC')).fill('123');
+const name = await findField('Full name on card', { timeoutMs: 3000, required: false });
+if (name) await name.fill('BBA Test Buyer');
+const postal = await findField('12345', { timeoutMs: 3000, required: false });
+if (postal) await postal.fill('12345');
 
 await page.getByTestId('hosted-payment-submit-button').click();
 await page.waitForURL(/\/success\?session_id=/, { timeout: 90_000 });

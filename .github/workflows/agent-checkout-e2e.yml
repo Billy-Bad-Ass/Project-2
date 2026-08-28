@@ -133,3 +133,16 @@ jobs:
       - name: Store log on failure
         if: failure()
         run: tail -100 /tmp/store.log
+
+      # What the Checkout page actually looked like when a field was not found.
+      # The script prints every input it could see and saves a screenshot; this
+      # is what makes the difference between "a selector timed out" and knowing
+      # whether Stripe renamed a field, showed a Link prompt, or errored.
+      - name: Upload the Checkout page on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkout-failure
+          path: checkout-failure.png
+          if-no-files-found: ignore
+          retention-days: 7
