@@ -19,10 +19,18 @@
  * "ready") item. Files of `needs-content` items are reported but do not
  * fail the deploy — checkout already refuses those SKUs, so a buyer cannot
  * reach their download route.
+ *
+ * Presence is not freshness. A file uploaded before its note was edited is
+ * still present, still the right page count, and still wrong — so this also
+ * compares the digest of each sellable file against the manifest the last
+ * upload wrote. That is the check that catches a `skip_upload` deploy shipping
+ * yesterday's content. See lib/source-digest.mjs.
  */
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { MANIFEST_KEY } from './lib/source-digest.mjs';
+import { auditBucket } from './lib/download-audit.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const catalog = JSON.parse(readFileSync(join(root, 'catalog', 'generated.json'), 'utf8'));
@@ -70,31 +78,77 @@ async function listObjects() {
   }
 }
 
-const objects = await listObjects();
+/**
+ * The digests recorded by the last successful `npm run pdf:upload`. Absent
+ * means the bucket was filled by a tool that did not record them, so nothing
+ * here can vouch for what is in it.
+ */
+async function readManifest() {
+  const res = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${account}/r2/buckets/${bucket}/objects/${MANIFEST_KEY}`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Could not read r2://${bucket}/${MANIFEST_KEY}: HTTP ${res.status}`);
 
-// A file blocks the deploy only if a buyer can actually pay for it: checkout
-// refuses any item whose status is not "ready", so those files cannot strand
-// a real purchase yet.
-let failures = 0;
-for (const item of catalog.items) {
-  const sellable = item.status === 'ready';
-  for (const file of item.files ?? []) {
-    const size = objects.get(file.name);
-    const present = size !== undefined && size > 0;
-    if (present) {
-      console.log(`✓ ${file.name} — ${size} bytes`);
-    } else if (sellable) {
-      console.log(`✗ ${file.name} — ${size === undefined ? 'MISSING from' : 'EMPTY in'} r2://${bucket} (sold by ${item.sku})`);
-      failures++;
-    } else {
-      console.log(`- ${file.name} — not in r2://${bucket}, but ${item.sku} is ${item.status} and cannot be bought`);
-    }
+  try {
+    return JSON.parse(await res.text());
+  } catch {
+    throw new Error(`r2://${bucket}/${MANIFEST_KEY} is not valid JSON.`);
   }
 }
 
-if (failures) {
-  console.error(`\n${failures} sellable file(s) are not in the production bucket.`);
+const objects = await listObjects();
+const manifest = await readManifest();
+
+const audit = auditBucket({ items: catalog.items, objects, manifest });
+
+for (const r of audit.results) {
+  switch (r.state) {
+    case 'current':
+      console.log(`✓ ${r.file} — ${r.size} bytes, matches its note`);
+      break;
+    case 'present':
+      console.log(`✓ ${r.file} — ${r.size} bytes`);
+      break;
+    case 'stale':
+      console.log(
+        `✗ ${r.file} — STALE in r2://${bucket}: built from older content ` +
+          `(bucket ${r.shipped.slice(0, 12)}…, catalogue ${r.expected.slice(0, 12)}…)`,
+      );
+      break;
+    case 'unrecorded':
+      console.log(`✗ ${r.file} — in r2://${bucket} but absent from ${MANIFEST_KEY}`);
+      break;
+    case 'absent-not-sellable':
+      console.log(`- ${r.file} — not in r2://${bucket}, but ${r.sku} cannot be bought`);
+      break;
+    default:
+      console.log(`✗ ${r.file} — ${r.state.toUpperCase()} in r2://${bucket} (sold by ${r.sku})`);
+  }
+}
+
+if (audit.failures) {
+  if (audit.missing) {
+    console.error(`\n${audit.missing} sellable file(s) are not in the production bucket.`);
+  }
+  if (audit.stale) {
+    console.error(
+      `\n${audit.stale} sellable file(s) in the bucket were built from older content.` +
+        '\nA buyer paying today would download the previous version.',
+    );
+  }
   console.error('Run `npm run pdf:build && npm run pdf:upload` before deploying.');
   process.exit(1);
 }
-console.log('\nEvery sellable PDF is in the production bucket.');
+
+if (audit.unverified) {
+  console.error(
+    `\nNo ${MANIFEST_KEY} in r2://${bucket}, so freshness could not be checked —` +
+      '\nevery file is present, but nothing proves it matches the current notes.' +
+      '\nRun `npm run pdf:build && npm run pdf:upload` once to record it.',
+  );
+  process.exit(1);
+}
+
+console.log('\nEvery sellable PDF is in the production bucket, and matches its note.');

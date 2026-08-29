@@ -17,6 +17,7 @@ import {
   stripEmptyTableRows,
 } from './lib/note-parser.mjs';
 import { readReviews, summarise } from './lib/reviews.mjs';
+import { sourceDigest } from './lib/source-digest.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const notesDir = join(root, 'content', 'products');
@@ -113,10 +114,26 @@ for (const file of readdirSync(notesDir).filter((f) => f.endsWith('.md'))) {
 }
 
 /** Both paper sizes ship for every product. */
-const filesFor = (slug) => [
-  { name: `${slug}-A4.pdf`, size: 'A4', label: 'A4' },
-  { name: `${slug}-Letter.pdf`, size: 'Letter', label: 'US Letter' },
+const PAPER_SIZES = [
+  { size: 'A4', label: 'A4' },
+  { size: 'Letter', label: 'US Letter' },
 ];
+const filesFor = (slug) =>
+  PAPER_SIZES.map(({ size, label }) => ({ name: `${slug}-${size}.pdf`, size, label }));
+
+/**
+ * Stamp every file with a fingerprint of the note it renders from, so a deploy
+ * can tell a current PDF in the bucket from a stale one. Bundles ship their
+ * members' files, so they inherit those digests rather than computing their own.
+ * See lib/source-digest.mjs.
+ */
+const withDigests = (item) => ({
+  ...item,
+  files: item.files.map((file) => ({
+    ...file,
+    sourceDigest: sourceDigest(item, file.size, meta.merchant.name),
+  })),
+});
 
 const products = (meta.products ?? [])
   .map((entry) => {
@@ -150,7 +167,8 @@ const products = (meta.products ?? [])
       files: filesFor(entry.sku),
     };
   })
-  .filter(Boolean);
+  .filter(Boolean)
+  .map(withDigests);
 
 const bundles = (meta.bundles ?? []).map((entry) => {
   const members = entry.includes.map((sku) => products.find((p) => p.sku === sku)).filter(Boolean);
@@ -186,7 +204,7 @@ const bundles = (meta.bundles ?? []).map((entry) => {
     status: members.every((m) => m.status === 'ready') ? 'ready' : 'needs-content',
     contentGap: null,
     includes: entry.includes,
-    files: members.flatMap((m) => filesFor(m.sku)),
+    files: members.flatMap((m) => m.files),
   };
 });
 
