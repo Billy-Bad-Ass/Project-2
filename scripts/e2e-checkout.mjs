@@ -194,13 +194,37 @@ async function describePage(missing) {
 const email = await findField('email@example.com', { timeoutMs: 20_000, required: false });
 if (email) await email.fill('e2e@bbanetwork.org');
 
-const cardOption = page.locator('#payment-method-accordion-item-title-card').first();
-if (await cardOption.isVisible({ timeout: 5000 }).catch(() => false)) {
-  await cardOption.click();
-  step('opened the card section', 'this account offers card, Cash App Pay, Klarna and bank');
+/*
+ * Two things the last run corrected about the previous guess.
+ *
+ * The radio carrying the accordion id is not the control. Clicking it times
+ * out for sixty seconds against Stripe's own overlay:
+ *
+ *     <input type="radio" tabindex="-1" id="payment-method-accordion-item-title-card">
+ *     <button data-testid="card-accordion-item-button" aria-label="Pay with card"
+ *             class="... AccordionButton-open AccordionButton-expandedClickArea ...">
+ *       subtree intercepts pointer events
+ *
+ * The button is the real control, and `AccordionButton-open` says the card
+ * section was already expanded — so the click was not only aimed at the wrong
+ * element, it was not needed at all.
+ *
+ * So look for the field first and only reach for the button if it is missing.
+ * That covers every arrangement without asserting which one this account has:
+ * card already open, card collapsed behind other methods, or a single-method
+ * account with no accordion. Clicking unconditionally is what makes a test
+ * brittle against a page we do not control.
+ */
+let cardNumber = await findField('1234 1234 1234 1234', { timeoutMs: 15_000, required: false });
+if (!cardNumber) {
+  const cardButton = page.getByTestId('card-accordion-item-button').first();
+  if (await cardButton.isVisible({ timeout: 5000 }).catch(() => false)) {
+    await cardButton.click();
+    step('opened the card section', 'it was collapsed behind the other payment methods');
+  }
+  cardNumber = await findField('1234 1234 1234 1234');
 }
-
-await (await findField('1234 1234 1234 1234')).fill('4242424242424242');
+await cardNumber.fill('4242424242424242');
 await (await findField('MM / YY')).fill('12 / 34');
 await (await findField('CVC')).fill('123');
 const name = await findField('Full name on card', { timeoutMs: 3000, required: false });
