@@ -170,11 +170,34 @@ async function describePage(missing) {
   console.log('\n  screenshot saved to checkout-failure.png\n');
 }
 
-// Stripe may offer to pay with a saved Link account before showing the form.
-// Dismissing it is what puts the card fields on screen.
-const payAnotherWay = page.getByRole('button', { name: /pay another way|use a different|enter card/i }).first();
-if (await payAnotherWay.isVisible({ timeout: 3000 }).catch(() => false)) {
-  await payAnotherWay.click().catch(() => {});
+/**
+ * Open the card form.
+ *
+ * This account has four payment methods enabled — card, Cash App Pay, Klarna
+ * and bank — so Checkout renders them as an accordion with every section
+ * collapsed. The diagnostics from the previous run show it exactly:
+ *
+ *     input: payment-method-accordion-item-title-card               | radio
+ *     input: payment-method-accordion-item-title-cashapp            | radio
+ *     input: payment-method-accordion-item-title-klarna             | radio
+ *     input: payment-method-accordion-item-title-link_instant_debit | radio
+ *
+ * and no card number field in any frame. It was never a selector that stopped
+ * matching: the card inputs are not in the DOM until the card section is
+ * opened, so no amount of searching for them could have worked. That is what
+ * the page dump was added to distinguish, and it did on its first run.
+ *
+ * Contact details come first because Checkout wants an email regardless of
+ * method, and a single-method account would skip the accordion entirely — so
+ * selecting card is conditional, and its absence is not an error.
+ */
+const email = await findField('email@example.com', { timeoutMs: 20_000, required: false });
+if (email) await email.fill('e2e@bbanetwork.org');
+
+const cardOption = page.locator('#payment-method-accordion-item-title-card').first();
+if (await cardOption.isVisible({ timeout: 5000 }).catch(() => false)) {
+  await cardOption.click();
+  step('opened the card section', 'this account offers card, Cash App Pay, Klarna and bank');
 }
 
 await (await findField('1234 1234 1234 1234')).fill('4242424242424242');
@@ -184,6 +207,8 @@ const name = await findField('Full name on card', { timeoutMs: 3000, required: f
 if (name) await name.fill('BBA Test Buyer');
 const postal = await findField('12345', { timeoutMs: 3000, required: false });
 if (postal) await postal.fill('12345');
+const phone = await findField('(201) 555-0123', { timeoutMs: 3000, required: false });
+if (phone) await phone.fill('2015550123');
 
 await page.getByTestId('hosted-payment-submit-button').click();
 await page.waitForURL(/\/success\?session_id=/, { timeout: 90_000 });
