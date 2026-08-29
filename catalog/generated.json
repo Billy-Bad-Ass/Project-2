@@ -140,12 +140,14 @@
         {
           "name": "espresso-dial-in-card-A4.pdf",
           "size": "A4",
-          "label": "A4"
+          "label": "A4",
+          "sourceDigest": "47e6d835d1a1d688c23874c6a4e4318163a424789d48327b2672f2f70a0a9799"
         },
         {
           "name": "espresso-dial-in-card-Letter.pdf",
           "size": "Letter",
-          "label": "US Letter"
+          "label": "US Letter",
+          "sourceDigest": "8d4146ac24dfb2aef21628e67290364dbeac4feab8586212f9ee7de766420ab6"
         }
       ],
       "reviews": [],
@@ -278,12 +280,14 @@
         {
           "name": "keyboard-sound-mod-chart-A4.pdf",
           "size": "A4",
-          "label": "A4"
+          "label": "A4",
+          "sourceDigest": "ad025b9a37f5f57f03bfe3dea8347aa01753af607dbf631e86c89a9a43d6faf5"
         },
         {
           "name": "keyboard-sound-mod-chart-Letter.pdf",
           "size": "Letter",
-          "label": "US Letter"
+          "label": "US Letter",
+          "sourceDigest": "a611e4d7796bd457d507ce54d6d8ab4843e4b19457f1f9b6613125c145805f06"
         }
       ],
       "reviews": [],
@@ -426,12 +430,14 @@
         {
           "name": "miniature-speedpaint-recipe-sheet-A4.pdf",
           "size": "A4",
-          "label": "A4"
+          "label": "A4",
+          "sourceDigest": "e0065fb943ef4ca21cb7650ecb644b34ba45b94a7385823a61653992891d2ef3"
         },
         {
           "name": "miniature-speedpaint-recipe-sheet-Letter.pdf",
           "size": "Letter",
-          "label": "US Letter"
+          "label": "US Letter",
+          "sourceDigest": "5ce9bfd661ff4f3e15cad75aded5c7f94f8228ac07fc560c155531a2d293349d"
         }
       ],
       "reviews": [],

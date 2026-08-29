@@ -33,6 +33,8 @@ npm test
 
 If it is already deployed, also `npm run pdf:upload && npm run cf:deploy` — the
 PDFs live in R2, not in the bundle, so a deploy alone does not update them.
+Forgetting the upload now fails the deploy rather than quietly selling the old
+file; `skip_upload` is only safe when no note changed.
 
 ## Rules that are load-bearing
 
@@ -47,7 +49,16 @@ PDFs live in R2, not in the bundle, so a deploy alone does not update them.
   Stripe-says-paid, not-refunded, and entitlement. Removing any one is a security
   regression. "Paid" means `payment_status`, never `status: 'complete'` — Klarna and
   Cash App complete the session before the money lands.
-- **Prices are pence.** `500` is £5.00.
+- **Prices are minor units of the catalogue currency**, which is `usd` in
+  `catalog/products.json`. `945` is $9.45. (`formatPrice` picks the locale from
+  the currency, so a switch to `gbp` needs no code change.)
+- **A PDF in the bucket must match the note it came from.** Presence is not
+  freshness: editing a note and deploying without `npm run pdf:upload` leaves
+  the old file in R2, and every other check still passes. `build-catalog.mjs`
+  stamps each file with a `sourceDigest`, `upload-downloads.mjs` publishes those
+  digests as `downloads-manifest.json`, and `verify-r2-downloads.mjs` fails the
+  deploy when the two disagree. If you change *how* PDFs render rather than what
+  they say, bump `RENDERER_VERSION` in `scripts/lib/source-digest.mjs`.
 - **The R2 bucket stays private.** No public bucket URL. The paywall is the download
   route; anything reachable around it is free product.
 - **Stripe calls use the async/fetch forms** (`constructEventAsync`,
