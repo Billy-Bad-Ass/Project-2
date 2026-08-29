@@ -15,6 +15,7 @@ content/products/*.md  →  catalog/generated.json  →  PDFs + storefront + Str
 ```bash
 npm install
 cp .env.example .env.local        # fill in the Stripe keys and a signing secret
+npm run catalog:check             # is the source sound? fails loudly if not
 npm run catalog:build             # notes + prices → catalog/generated.json
 npm run pdf:build                 # → private/downloads/*.pdf (A4 + US Letter)
 npm run dev                       # → http://localhost:3000
@@ -36,6 +37,7 @@ Then buy something with card `4242 4242 4242 4242`, any future expiry, any CVC.
 | `content/products/*.md` | **The source of truth.** One note per product: frontmatter, the printable pages, and the marketplace listing copy. |
 | `catalog/products.json` | Commercial metadata only — price, display order, icon, accent. |
 | `catalog/generated.json` | Built artefact merging the two. Committed; never edited by hand. |
+| `scripts/validate-catalog.mjs` | Checks the source against a schema and fails the build. Run first. |
 | `scripts/build-catalog.mjs` | Parses the notes and merges. Prints warnings you should read. |
 | `scripts/build-pdfs.mjs` | Renders each note to A4 and US Letter via headless Chromium. |
 | `scripts/stripe-sync.mjs` | Pushes the catalogue to Stripe, idempotently. Dry run by default. |
@@ -70,6 +72,7 @@ trusted from a stored flag.
 | `npm run dev` | Development server |
 | `npm run build` | Production build (runs `catalog:build` first) |
 | `npm test` | Unit tests — parser, tokens, entitlements, catalogue integrity |
+| `npm run catalog:check` | Validate the notes and prices before anything is generated |
 | `npm run catalog:build` | Rebuild `catalog/generated.json` from the notes |
 | `npm run pdf:build` | Rebuild the product PDFs |
 | `npm run pdf:check` | Verify every PDF matches the page count its listing promises |
