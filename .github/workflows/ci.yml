@@ -30,6 +30,13 @@ jobs:
       - name: Validate agent workflow scripts
         run: npm run workflows:check
 
+      - name: Validate the catalogue source
+        # Runs before the build because the build cannot fail: it records every
+        # problem as a warning, writes it into generated.json and exits 0 - and a
+        # baked-in warning is stable, so the staleness check below passes too. A
+        # guide could ship with no price with every light green.
+        run: npm run catalog:check
+
       - name: Build catalogue
         run: npm run catalog:build
 

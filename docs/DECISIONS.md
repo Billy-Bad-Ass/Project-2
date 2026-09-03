@@ -142,3 +142,32 @@ which is gitignored. Only ten agency-agents subagents are materialised into
 updatable and keeps this repository small. The two things actually depended on — eleven
 Font Awesome glyphs and ten role agents — are checked in so the repo works without the
 bootstrap having been run.
+
+## The catalogue source is validated separately from the build
+
+`npm run catalog:check` (`scripts/validate-catalog.mjs`) reads the notes and
+`catalog/products.json`, checks them against a schema and a set of cross-file
+rules, and exits non-zero. It runs before `catalog:build` in CI and in
+`prebuild`, and writes nothing.
+
+**Why:** `build-catalog.mjs` cannot fail. Every problem it meets — a sku with
+no note, a note with no listing copy, a review pointing at a guide that does
+not exist — becomes a string in `warnings`, gets written into
+`catalog/generated.json`, and the script exits 0. The CI step after it checks
+only that the generated file is not *stale*, and a warning baked into the
+committed artefact is perfectly stable, so that check passes too.
+
+The case that made it worth building: deleting `priceMinor` from one product
+leaves `undefined`, which `JSON.stringify` drops, so the key disappears from
+`generated.json` entirely. The build prints `$NaN` and exits 0. The catalogue
+test comparing generated prices against the metadata then compares `undefined`
+with `undefined` and passes. Every light stays green and the shop offers a
+guide with no price.
+
+**Why a hand-rolled schema rather than a library:** the same reason
+`check-pdfs.mjs` counts PDF pages itself. These scripts run in CI on a clean
+checkout, and the document has four field types in it.
+
+**Why warnings still do not fail:** a dropped empty table row is a
+content-quality note for a human. Only structural problems — the ones that
+change what the shop sells or charges — block.
